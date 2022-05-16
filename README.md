@@ -21,4 +21,5 @@
 
 [1].编译程序的设计与实现
 
-<img src="C:\Users\Albus-Qz\Desktop\src=http---cdnimg103.lizhi.fm-audio_cover-2017-08-17-2619367354329486855_580x580.jpg&amp;refer=http---cdnimg103.lizhi.jpg" style="zoom: 33%;" />
+<center><font color=red size = 15px>《----To Be Continued-----</font></center>
+
