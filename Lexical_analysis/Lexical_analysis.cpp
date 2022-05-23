@@ -1,20 +1,87 @@
-﻿// Lexical_analysis.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
+﻿#include <iostream>
+#include <string>
+using namespace std;
 
-#include <iostream>
+enum LexType
+{
+	ENDFILE, ERROR,
+	PROGRAM, PROCEDURE, TYPE, VAR, IF,
+	THEN, ELSE, FI, WHILE, DO, ENDWH,
+	BEGIN, END1, READ, WRITE, ARRAY, OF,
+	RECORD, RETURN1,
+	INTEGER, CHAR1,
+	ID, INTC, CHARC,
+	ASSIGN, EQ, LT, PLUS, MINUS,
+	TIMES, OVER, LPAREN, RPAREN, DOT,
+	COLON, SEMI, COMMA, LMIDPAREN, RMIDPAREN,
+	UNDERANGE
+};
+
+
+class Word
+{
+public:
+	string str;
+	LexType tok;
+}
+reservedWords[21] =
+{
+	{"program",PROGRAM},
+	{"type",TYPE},
+	{"var",VAR},
+	{"procedure",PROCEDURE},
+	{"begin",BEGIN},
+	{"end",END1},
+	{"array",ARRAY},
+	{"of",OF},
+	{"record",RECORD},
+	{"if",IF},{"then",THEN},
+	{"else",ELSE},
+	{"fi",FI},
+	{"while",WHILE},
+	{"do",DO},
+	{"endwh",ENDWH},
+	{"read",READ},
+	{"write",WRITE},
+	{"return",RETURN1},
+	{"integer",INTEGER},
+	{"char",CHAR1}
+};
+
+class Token {
+	int line;
+	Word wd;
+	int index = -1; // tokenlist中的index
+};// token
+
+
+Token tokenList[1024];
+
+enum DeTerminal
+{
+	Program, ProgramHead, ProgramName, DeclarePart,
+	TypeDec, TypeDeclaration, TypeDecList, TypeDecMore,
+	TypeId, TypeName, BaseType, StructureType,
+	ArrayType, Low, Top, RecType,
+	FieldDecList, FieldDecMore, IdList, IdMore,
+	VarDec, VarDeclaration, VarDecList, VarDecMore,
+	VarIdList, VarIdMore, ProcDec, ProcDeclaration,
+	ProcDecMore, ProcName, ParamList, ParamDecList,
+	ParamMore, Param, FormList, FidMore,
+	ProcDecPart, ProcBody, ProgramBody, StmList,
+	StmMore, Stm, AssCall, AssignmentRest,
+	ConditionalStm, StmL, LoopStm, InputStm,
+	InVar, OutputStm, ReturnStm, CallStmRest,
+	ActParamList, ActParamMore, RelExp, OtherRelE,
+	Exp, OtherTerm, Term, OtherFactor,
+	Factor, Variable, VariMore, FieldVar,
+	FieldVarMore, CmpOp, AddOp, MultOp
+};
+
+typedef LexType Terminal;
 
 int main()
 {
     std::cout << "Hello World!\n";
+	return 0;
 }
-
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
-
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
