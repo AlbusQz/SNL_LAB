@@ -18,5 +18,8 @@
     <ClCompile Include="Grammatical_analysis.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Recursive_descent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
