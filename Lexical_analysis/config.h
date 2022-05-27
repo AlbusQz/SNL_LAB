@@ -34,6 +34,10 @@ enum Terminal
 	MULTY,
 	DEVIDE,
 	LT,
+	COLON,
+	COMMA,
+	ASSIGN,
+	ARRAYTOP,
 	ENDOFFILE,  //EOF
 	LEFTPAREN,
 	RIGHTPAREN,
@@ -79,7 +83,11 @@ enum State
 	INID,
 	STATEEND,
 	DONE1,
-	DONE
+	DONE,
+	INNUM,
+	INPOI,
+	INASIGN,
+	INCOMM
 };
 
 class Identifier
@@ -93,6 +101,28 @@ public:
 		text = cont;
 	}
 	Identifier(){}
+};
+
+class Const
+{
+public:
+	bool isnum;
+	int num;
+	string text;
+	Const(int nu)
+	{
+		num = nu;
+		isnum = true;
+	}
+	Const(string tex)
+	{
+		text = tex;
+		isnum = false;
+	}
+	Const()
+	{
+
+	}
 };
 
 
@@ -128,3 +158,4 @@ bool isSpe(char ch);
 void tokenPrint(Token* head);
 Terminal findNum(string word);
 Terminal findNum(char ch);
+int getValue(string s);

@@ -3,7 +3,7 @@
 using namespace std;
 //
 extern Identifier identifier_list[500];
-
+extern Const const_list[500];
 bool isReserved(string s)
 {
 	if (s == "program")
@@ -120,6 +120,10 @@ Terminal findNum(char ch)
 		return RIGHTMIDPAREN;
 	if (ch == '=')
 		return EQUAL;
+	if (ch == ';')
+		return COLON;
+	if (ch == ',')
+		return COMMA;
 }
 
 void tokenPrint(Token* head)
@@ -128,17 +132,24 @@ void tokenPrint(Token* head)
 	cout << "Line\t  " << "token\t\t" << "id" << endl;
 	while (head != NULL)
 	{
-		if (head->index != -1)
+		if (head->type ==0)
 		{
-			cout<<head->line << '\t' << "< " << head->type <<" , " << head->index << " >"<< '\t'<<identifier_list[head->index].text<<endl;
+			cout << head->line << '\t' << "< " << head->type << " , " << head->index << " >" << '\t' << identifier_list[head->index].text << endl;
+		}
+		else if (head->type == 1)
+		{
+			if(const_list[head->index].isnum)
+				cout << head->line << '\t' << "< " << head->type << " , " << head->index << " >" << '\t'  << const_list[head->index].num<<endl;
+			else
+				cout << head->line << '\t' << "< " << head->type << " , " << head->index << " >" << '\t' << const_list[head->index].text << endl;
 		}
 		else
 		{
 			cout << head->line << '\t' << "< " << head->type << " , " << '-' << " >" << endl;
+	
 		}
 		head = head->next;
 	}
-	
 }
 
 bool isSpe(char ch)
@@ -165,5 +176,12 @@ bool isSpe(char ch)
 		return true;
 	if (ch == '<')
 		return true;
+	if (ch == ',')
+		return true;
 	return false;
+}
+
+int getValue(string s)
+{
+	return atoi(s.c_str());
 }
