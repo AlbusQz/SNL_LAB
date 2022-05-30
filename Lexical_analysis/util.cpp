@@ -1,5 +1,6 @@
 ﻿#include "config.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 
 Token* token_head = new Token();
@@ -12,11 +13,13 @@ int main(void)
 	int lineNum = 1;
 	int index = 0;
 	char ch=' ';
+	fstream source;
+	source.open(sourcepath);
 	State state = START;
 	string cur_word = "";
-	while (ch != '?')
+	while (!source.eof())
 	{
-		ch = getchar();
+		source.get(ch);
 		if (ch == '\n')
 			lineNum++;
 		if (state == DONE)
