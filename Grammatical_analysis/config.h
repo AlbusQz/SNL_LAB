@@ -41,9 +41,17 @@ enum Terminal
 	RIGHTMIDPAREN,
 	ERROR,
 	NONE,
-	EQUAL
-
-	
+	EQUAL,
+	//∆‰À˚ÃÌº”
+	ID,
+	TYPE,
+	RECORD,
+	INTC, 
+	SEMICOLON,
+	COMMA,
+	RETURN,
+	ASSIGN,
+	DOT,
 };
 
 enum NonTerminal
