@@ -24,6 +24,9 @@
     <ClCompile Include="TokenIO.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Token2Tree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Lexical_analysis\config.h">

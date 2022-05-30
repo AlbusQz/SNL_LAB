@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="Grammatical_analysis.cpp" />
     <ClCompile Include="Recursive_descent.cpp" />
+    <ClCompile Include="Token2Tree.cpp" />
     <ClCompile Include="TokenIO.cpp" />
   </ItemGroup>
   <ItemGroup>

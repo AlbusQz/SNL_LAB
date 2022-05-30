@@ -1,6 +1,5 @@
 #pragma once
 #include<string>
-#include<fstream>
 using namespace std;
 
 
@@ -42,9 +41,17 @@ enum Terminal
 	RIGHTMIDPAREN,
 	ERROR,
 	NONE,
-	EQUAL
-
-	
+	EQUAL,
+	//∆‰À˚ÃÌº”
+	ID,
+	TYPE,
+	RECORD,
+	INTC, 
+	SEMICOLON,
+	COMMA,
+	RETURN,
+	ASSIGN,
+	DOT,
 };
 
 enum NonTerminal
@@ -119,7 +126,6 @@ public:
 		
 		next = NULL;
 	}
-
 };// token
 
 
@@ -130,9 +136,5 @@ bool isLetter(char ch);
 bool isDigit(char ch);
 bool isSpe(char ch);
 void tokenPrint(Token* head);
-
 Terminal findNum(string word);
 Terminal findNum(char ch);
-
-void printTokenToFile(Token* head, string path);
-Token* readTokenFromFile(string path);
