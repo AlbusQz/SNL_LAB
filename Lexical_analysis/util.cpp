@@ -5,8 +5,8 @@
 
 Token* token_head = new Token();
 Token* token_tail = token_head;
-Identifier identifier_list[500];
-const char sourcepath[50] = "source_code.txt",tokenpath[50]="token_list.txt";
+extern Identifier identifier_list[500];
+const char sourcepath[50] = "source_code.txt",tokenpath[50]="./token_list.txt";
 int id_list_tail = 0;
 int main(void)
 {
@@ -77,7 +77,9 @@ int main(void)
 		
 	}
 	tokenPrint(token_head->next);
-
+	printTokenToFile(token_head->next, tokenpath);
+	Token* read = readTokenFromFile(tokenpath);
+	tokenPrint(read->next);
 
 	return 0;
 }

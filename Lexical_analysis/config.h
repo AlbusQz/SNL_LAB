@@ -1,5 +1,6 @@
 #pragma once
 #include<string>
+#include<fstream>
 using namespace std;
 
 
@@ -116,6 +117,7 @@ public:
 		
 		next = NULL;
 	}
+
 };// token
 
 
@@ -126,5 +128,9 @@ bool isLetter(char ch);
 bool isDigit(char ch);
 bool isSpe(char ch);
 void tokenPrint(Token* head);
+
 Terminal findNum(string word);
 Terminal findNum(char ch);
+
+void printTokenToFile(Token* head, string path);
+Token* readTokenFromFile(string path);
