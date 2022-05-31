@@ -1,9 +1,12 @@
 ﻿#include "config.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 
 Token* token_head = new Token();
 Token* token_tail = token_head;
+extern Identifier identifier_list[500];
+const char sourcepath[50] = "source_code.txt",tokenpath[50]="./token_list.txt";
 Identifier identifier_list[500];
 Const const_list[500];
 const char sourcepath[50] = "source_code.txt",tokenpath[50]="token_list.txt";
@@ -14,9 +17,12 @@ int main(void)
 	int lineNum = 1;
 	int index = 0;
 	char ch=' ';
+	fstream source;
+	source.open(sourcepath);
 	bool reScan = false;
 	State state = START;
 	string cur_word = "";
+	while (!source.eof())
 	ch = getchar();
 	while (ch != '?')
 	{
@@ -152,7 +158,9 @@ int main(void)
 			
 	}
 	tokenPrint(token_head->next);
-
+	printTokenToFile(token_head->next, tokenpath);
+	Token* read = readTokenFromFile(tokenpath);
+	tokenPrint(read->next);
 
 	return 0;
 }

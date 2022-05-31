@@ -88,6 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>../Lexical_analysis;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +142,11 @@
   <ItemGroup>
     <ClCompile Include="Grammatical_analysis.cpp" />
     <ClCompile Include="Recursive_descent.cpp" />
+    <ClCompile Include="Token2Tree.cpp" />
+    <ClCompile Include="TokenIO.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Lexical_analysis\config.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
