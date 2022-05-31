@@ -6,7 +6,7 @@
 Token* token_head = new Token();
 Token* token_tail = token_head;
 Identifier identifier_list[500];
-const char sourcepath[50] = "source_code.txt",tokenpath[50]="token_list.txt";
+const char sourcepath[50] = "source.txt",tokenpath[50]="token_list.txt";
 int id_list_tail = 0;
 int main(void)
 {
@@ -50,11 +50,14 @@ int main(void)
 			}
 			else
 			{
+				
+				
 				state = DONE;
 				if (isReserved(cur_word))
 				{
 					token_tail->next = new Token(lineNum, findNum(cur_word), -1);
 					token_tail = token_tail->next;
+					
 				}
 				else
 				{
@@ -62,14 +65,20 @@ int main(void)
 					id_list_tail++;
 					token_tail->next = new Token(lineNum,IDENTIFIER,id_list_tail-1);
 					token_tail = token_tail->next;
+				}cur_word = "";
+				if (isSpe(ch))
+				{
+					token_tail->next = new Token(lineNum, findNum(ch), -1);
+					token_tail = token_tail->next;
 				}
-				cur_word = "";
+				
+				
 			}
 			break;
 		case STATEEND:
 			break;
 		case DONE:
-
+			
 			break;
 		default:
 			break;

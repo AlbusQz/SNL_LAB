@@ -4,6 +4,7 @@
 #include<map>
 #include<cstdlib>
 #include<cstring>
+#include"Syntax_tree.h"
 #include"config.h"
 
 //LL1·ÖÎö±í
@@ -18,7 +19,7 @@ void CreateLL1Table()
 
 	LL1Table[ProgramHead][PROGRAM] = 2;
 
-	LL1Table[ProgramName][ID] = 3;
+	LL1Table[ProgramName][IDENTIFIER] = 3;
 
 	LL1Table[DeclarePart][TYPE] = 4;
 	LL1Table[DeclarePart][VAR] = 4;
@@ -33,16 +34,16 @@ void CreateLL1Table()
 
 	LL1Table[TypeDeclaration][TYPE] = 7;
 
-	LL1Table[TypeDecList][ID] = 8;
+	LL1Table[TypeDecList][IDENTIFIER] = 8;
 
 	LL1Table[TypeDecMore][VAR] = 9;
 	LL1Table[TypeDecMore][PROCEDURE] = 9;
 	LL1Table[TypeDecMore][BEGIN] = 9;
 
 
-	LL1Table[TypeDecMore][ID] = 10;
+	LL1Table[TypeDecMore][IDENTIFIER] = 10;
 
-	LL1Table[TypeId][ID] = 11;
+	LL1Table[TypeId][IDENTIFIER] = 11;
 
 	LL1Table[TypeName][INTEGER] = 12;
 	LL1Table[TypeName][CHAR] = 12;
@@ -50,7 +51,7 @@ void CreateLL1Table()
 	LL1Table[TypeName][ARRAY] = 13;
 	LL1Table[TypeName][RECORD] = 13;
 
-	LL1Table[TypeName][ID] = 14;
+	LL1Table[TypeName][IDENTIFIER] = 14;
 
 	LL1Table[BaseType][INTEGER] = 15;
 
@@ -79,7 +80,7 @@ void CreateLL1Table()
 	LL1Table[FieldDecMore][CHAR] = 26;
 	LL1Table[FieldDecMore][ARRAY] = 26;
 
-	LL1Table[IdList][ID] = 27;
+	LL1Table[IdList][IDENTIFIER] = 27;
 
 	LL1Table[IdMore][SEMICOLON] = 28;
 
@@ -96,7 +97,7 @@ void CreateLL1Table()
 	LL1Table[VarDecList][CHAR] = 33;
 	LL1Table[VarDecList][ARRAY] = 33;
 	LL1Table[VarDecList][RECORD] = 33;
-	LL1Table[VarDecList][ID] = 33;
+	LL1Table[VarDecList][IDENTIFIER] = 33;
 
 	LL1Table[VarDecMore][PROCEDURE] = 34;
 	LL1Table[VarDecMore][BEGIN] = 34;
@@ -106,9 +107,9 @@ void CreateLL1Table()
 	LL1Table[VarDecMore][CHAR] = 35;
 	LL1Table[VarDecMore][ARRAY] = 35;
 	LL1Table[VarDecMore][RECORD] = 35;
-	LL1Table[VarDecMore][ID] = 35;
+	LL1Table[VarDecMore][IDENTIFIER] = 35;
 
-	LL1Table[VarIdList][ID] = 36;
+	LL1Table[VarIdList][IDENTIFIER] = 36;
 
 	LL1Table[VarIdMore][SEMICOLON] = 37;
 
@@ -124,7 +125,7 @@ void CreateLL1Table()
 
 	LL1Table[ProcDecMore][PROCEDURE] = 43;
 
-	LL1Table[ProcName][ID] = 44;
+	LL1Table[ProcName][IDENTIFIER] = 44;
 
 	LL1Table[ParamList][RIGHTPAREN] = 45;
 
@@ -132,14 +133,14 @@ void CreateLL1Table()
 	LL1Table[ParamList][CHAR] = 46;
 	LL1Table[ParamList][ARRAY] = 46;
 	LL1Table[ParamList][RECORD] = 46;
-	LL1Table[ParamList][ID] = 46;
+	LL1Table[ParamList][IDENTIFIER] = 46;
 	LL1Table[ParamList][VAR] = 46;
 
 	LL1Table[ParamDecList][INTEGER] = 47;
 	LL1Table[ParamDecList][CHAR] = 47;
 	LL1Table[ParamDecList][ARRAY] = 47;
 	LL1Table[ParamDecList][RECORD] = 47;
-	LL1Table[ParamDecList][ID] = 47;
+	LL1Table[ParamDecList][IDENTIFIER] = 47;
 	LL1Table[ParamDecList][VAR] = 47;
 
 	LL1Table[ParamMore][LEFTPAREN] = 48;
@@ -150,13 +151,14 @@ void CreateLL1Table()
 	LL1Table[Param][CHAR] = 50;
 	LL1Table[Param][ARRAY] = 50;
 	LL1Table[Param][RECORD] = 50;
-	LL1Table[Param][ID] = 50;
+	LL1Table[Param][IDENTIFIER] = 50;
 
 	LL1Table[Param][VAR] = 51;
 
-	LL1Table[FormList][ID] = 52;
+	LL1Table[FormList][IDENTIFIER] = 52;
 
 	LL1Table[FidMore][SEMICOLON] = 53;
+	LL1Table[FidMore][RIGHTMIDPAREN] = 53;
 	LL1Table[FidMore][RIGHTMIDPAREN] = 53;
 
 	LL1Table[FidMore][COMMA] = 54;
@@ -170,7 +172,7 @@ void CreateLL1Table()
 
 	LL1Table[ProgramBody][BEGIN] = 57;
 
-	LL1Table[StmList][ID] = 58;
+	LL1Table[StmList][IDENTIFIER] = 58;
 	LL1Table[StmList][IF] = 58;
 	LL1Table[StmList][WHILE] = 58;
 	LL1Table[StmList][RETURN] = 58;
@@ -194,7 +196,7 @@ void CreateLL1Table()
 
 	LL1Table[Stm][RETURN] = 65;
 
-	LL1Table[Stm][ID] = 66;
+	LL1Table[Stm][IDENTIFIER] = 66;
 
 	LL1Table[AssCall][ASSIGN] = 67;
 
@@ -211,7 +213,7 @@ void CreateLL1Table()
 
 	LL1Table[InputStm][READ] = 72;
 
-	LL1Table[InVar][ID] = 73;
+	LL1Table[InVar][IDENTIFIER] = 73;
 
 	LL1Table[OutputStm][WRITE] = 74;
 
@@ -221,7 +223,7 @@ void CreateLL1Table()
 
 	LL1Table[ActParamList][RIGHTPAREN] = 77;
 
-	LL1Table[ActParamList][ID] = 78;
+	LL1Table[ActParamList][IDENTIFIER] = 78;
 	LL1Table[ActParamList][INTC] = 78;
 	LL1Table[ActParamList][LEFTPAREN] = 78;
 
@@ -231,14 +233,14 @@ void CreateLL1Table()
 
 	LL1Table[RelExp][LEFTPAREN] = 81;
 	LL1Table[RelExp][INTC] = 81;
-	LL1Table[RelExp][ID] = 81;
+	LL1Table[RelExp][IDENTIFIER] = 81;
 
 	LL1Table[OtherRelE][LT] = 82;
 	LL1Table[OtherRelE][EQUAL] = 82;
 
 	LL1Table[Exp][LEFTPAREN] = 83;
 	LL1Table[Exp][INTC] = 83;
-	LL1Table[Exp][ID] = 83;
+	LL1Table[Exp][IDENTIFIER] = 83;
 
 	LL1Table[OtherTerm][LT] = 84;
 	LL1Table[OtherTerm][EQUAL] = 84;
@@ -259,7 +261,7 @@ void CreateLL1Table()
 
 	LL1Table[Term][LEFTPAREN] = 86;
 	LL1Table[Term][INTC] = 86;
-	LL1Table[Term][ID] = 86;
+	LL1Table[Term][IDENTIFIER] = 86;
 
 	LL1Table[OtherFactor][ADD] = 87;
 	LL1Table[OtherFactor][MINUS] = 87;
@@ -283,9 +285,9 @@ void CreateLL1Table()
 
 	LL1Table[Factor][INTC] = 90;
 
-	LL1Table[Factor][ID] = 91;
+	LL1Table[Factor][IDENTIFIER] = 91;
 
-	LL1Table[Variable][ID] = 92;
+	LL1Table[Variable][IDENTIFIER] = 92;
 
 	LL1Table[VariMore][ASSIGN] = 93;
 	LL1Table[VariMore][MULTY] = 93;
@@ -309,7 +311,7 @@ void CreateLL1Table()
 
 	LL1Table[VariMore][DOT] = 95;
 
-	LL1Table[FieldVar][ID] = 96;
+	LL1Table[FieldVar][IDENTIFIER] = 96;
 
 	LL1Table[FieldVarMore][ASSIGN] = 97;
 	LL1Table[FieldVarMore][MULTY] = 97;
@@ -342,4 +344,28 @@ void CreateLL1Table()
 
 	LL1Table[MultOp][DEVIDE] = 104;
 
+}
+
+STree* buildTree(Token *token)
+{
+	Token* next = token->next;
+	Terminal topT;
+	NonTerminal topN;
+	CreateLL1Table();
+	STree* root = rootTree;
+	root = new STree("Program");
+	StackNode *sn = new StackNode(0, Program);
+	sn->st = root;
+	AStack.push(*sn);
+	while (!AStack.empty())
+	{
+		if (AStack.top().flag == 1)
+		{
+			topT = AStack.top().t;
+			if (topT == token->type)
+			{
+				//identifier_list[head->index].text
+			}
+		}
+	}
 }

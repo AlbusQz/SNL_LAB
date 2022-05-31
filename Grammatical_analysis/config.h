@@ -43,15 +43,15 @@ enum Terminal
 	NONE,
 	EQUAL,
 	//其他添加
-	ID,
 	TYPE,
 	RECORD,
-	INTC, 
-	SEMICOLON,
-	COMMA,
+	INTC,
+	SEMICOLON,//分号
+	COMMA,//逗号
 	RETURN,
-	ASSIGN,
-	DOT,
+	ASSIGN,//赋值符号
+	DOT,//点
+	
 };
 
 enum NonTerminal

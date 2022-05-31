@@ -4,6 +4,54 @@ using namespace std;
 //
 extern Identifier identifier_list[500];
 
+/**/string Termin[50] =
+{
+	"IDENTIFIER",//标识符
+	"CONST", //常量
+	//下面都是保留字
+	"PROGRAM",
+	"VAR",
+	"INTEGER",
+	"ARRAY",
+	"OF",
+	"CHAR",
+	"PROCEDURE",
+	"BEGIN",
+	"WHILE",
+	"DO",
+	"IF",
+	"THEN",
+	"ELSE",
+	"FI",
+	"ENDWH",
+	"END",
+	"READ",
+	"WRITE",
+	//特殊符号
+	"ADD",
+	"MINUS",
+	"MULTY",
+	"DEVIDE",
+	"LT",
+	"ENDOFFILE",  //EOF
+	"LEFTPAREN",
+	"RIGHTPAREN",
+	"LEFTMIDPAREN",
+	"RIGHTMIDPAREN",
+	"ERROR",
+	"NONE",
+	"EQUAL",
+	//其他添加
+	"TYPE",
+	"RECORD",
+	"INTC",
+	"SEMICOLON",//分号
+	"COMMA",//逗号
+	"RETURN",
+	"ASSIGN",//赋值符号
+	"DOT",//点
+};
+
 bool isReserved(string s)
 {
 	if (s == "program")
@@ -39,6 +87,10 @@ bool isReserved(string s)
 	if (s == "read")
 		return true;
 	if (s == "write")
+		return true;
+	if (s == "type")
+		return true;
+	if (s == "record")
 		return true;
 	return false;
 
@@ -95,6 +147,12 @@ Terminal findNum(string s)
 	if (s == "write")
 		return WRITE;
 	
+	//
+	if (s == "type")
+		return TYPE;
+	if (s == "record")
+		return RECORD;
+
 	return ERROR;
 }
 
@@ -120,6 +178,15 @@ Terminal findNum(char ch)
 		return RIGHTMIDPAREN;
 	if (ch == '=')
 		return EQUAL;
+	//曲政添加（有可能出错（很有可能））
+	if (ch == ';')
+		return SEMICOLON;
+	if (ch == ',')
+	{
+		return COMMA;
+	}
+	if (ch == '.')
+		return DOT;
 }
 
 void tokenPrint(Token* head)
@@ -130,11 +197,11 @@ void tokenPrint(Token* head)
 	{
 		if (head->index != -1)
 		{
-			cout<<head->line << '\t' << "< " << head->type <<" , " << head->index << " >"<< '\t'<<identifier_list[head->index].text<<endl;
+			cout<<head->line << '\t' << "< " << head->type <<" , " << head->index << " >"<< '\t'<<identifier_list[head->index].text<<"\t" <<Termin[head->type]<< endl;
 		}
 		else
 		{
-			cout << head->line << '\t' << "< " << head->type << " , " << '-' << " >" << endl;
+			cout << head->line << '\t' << "< " << head->type << " , " << '-' << " >" << "\t\t" << Termin[head->type] << endl;
 		}
 		head = head->next;
 	}
@@ -164,6 +231,10 @@ bool isSpe(char ch)
 	if (ch == '=')
 		return true;
 	if (ch == '<')
+		return true;
+	if (ch == '.')
+		return true;
+	if (ch == ',')
 		return true;
 	return false;
 }

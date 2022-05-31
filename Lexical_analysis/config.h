@@ -41,10 +41,20 @@ enum Terminal
 	RIGHTMIDPAREN,
 	ERROR,
 	NONE,
-	EQUAL
-
+	EQUAL,
+	//其他添加
+	TYPE,
+	RECORD,
+	INTC,
+	SEMICOLON,//分号
+	COMMA,//逗号
+	RETURN,
+	ASSIGN,//赋值符号
+	DOT,//点
 	
 };
+
+
 
 enum NonTerminal
 {
