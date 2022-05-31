@@ -1,3 +1,4 @@
+#pragma once
 #include<iostream>
 #include<vector>
 #include<string>
@@ -5,8 +6,13 @@
 #include<cstdlib>
 #include<cstring>
 #include"Syntax_tree.h"
-#include"config.h"
+#include<stack>
+#include "..\Lexical_analysis\config.h"
 
+
+
+STree* rootTree;
+stack<StackNode> AStack;
 //LL1·ÖÎö±í
 int LL1Table[104][104];
 
@@ -82,7 +88,7 @@ void CreateLL1Table()
 
 	LL1Table[IdList][IDENTIFIER] = 27;
 
-	LL1Table[IdMore][SEMICOLON] = 28;
+	LL1Table[IdMore][COLON] = 28;
 
 	LL1Table[IdMore][COMMA] = 29;
 
@@ -111,7 +117,7 @@ void CreateLL1Table()
 
 	LL1Table[VarIdList][IDENTIFIER] = 36;
 
-	LL1Table[VarIdMore][SEMICOLON] = 37;
+	LL1Table[VarIdMore][COLON] = 37;
 
 	LL1Table[VarIdMore][COMMA] = 38;
 
@@ -145,7 +151,7 @@ void CreateLL1Table()
 
 	LL1Table[ParamMore][LEFTPAREN] = 48;
 
-	LL1Table[ParamMore][SEMICOLON] = 49;
+	LL1Table[ParamMore][COLON] = 49;
 
 	LL1Table[Param][INTEGER] = 50;
 	LL1Table[Param][CHAR] = 50;
@@ -157,7 +163,7 @@ void CreateLL1Table()
 
 	LL1Table[FormList][IDENTIFIER] = 52;
 
-	LL1Table[FidMore][SEMICOLON] = 53;
+	LL1Table[FidMore][COLON] = 53;
 	LL1Table[FidMore][RIGHTMIDPAREN] = 53;
 	LL1Table[FidMore][RIGHTMIDPAREN] = 53;
 
@@ -184,7 +190,7 @@ void CreateLL1Table()
 	LL1Table[StmMore][ELSE] = 59;
 	LL1Table[StmMore][FI] = 59;
 
-	LL1Table[StmMore][SEMICOLON] = 60;
+	LL1Table[StmMore][COLON] = 60;
 
 	LL1Table[Stm][IF] = 61;
 
@@ -248,7 +254,7 @@ void CreateLL1Table()
 	LL1Table[OtherTerm][DO] = 84;
 	LL1Table[OtherTerm][RIGHTPAREN] = 84;
 	LL1Table[OtherTerm][END] = 84;
-	LL1Table[OtherTerm][SEMICOLON] = 84;
+	LL1Table[OtherTerm][COLON] = 84;
 	LL1Table[OtherTerm][COMMA] = 84;
 	LL1Table[OtherTerm][ENDWH] = 84;
 	LL1Table[OtherTerm][ELSE] = 84;
@@ -274,7 +280,7 @@ void CreateLL1Table()
 	LL1Table[OtherFactor][ENDWH] = 87;
 	LL1Table[OtherFactor][RIGHTPAREN] = 87;
 	LL1Table[OtherFactor][END] = 87;
-	LL1Table[OtherFactor][SEMICOLON] = 87;
+	LL1Table[OtherFactor][COLON] = 87;
 	LL1Table[OtherFactor][COMMA] = 87;
 	LL1Table[OtherFactor][RIGHTMIDPAREN] = 87;
 
@@ -303,7 +309,7 @@ void CreateLL1Table()
 	LL1Table[VariMore][ENDWH] = 93;
 	LL1Table[VariMore][RIGHTPAREN] = 93;
 	LL1Table[VariMore][END] = 93;
-	LL1Table[VariMore][SEMICOLON] = 93;
+	LL1Table[VariMore][COLON] = 93;
 	LL1Table[VariMore][COMMA] = 93;
 	LL1Table[VariMore][RIGHTMIDPAREN] = 93;
 
@@ -327,7 +333,7 @@ void CreateLL1Table()
 	LL1Table[FieldVarMore][ENDWH] = 97;
 	LL1Table[FieldVarMore][RIGHTPAREN] = 97;
 	LL1Table[FieldVarMore][END] = 97;
-	LL1Table[FieldVarMore][SEMICOLON] = 97;
+	LL1Table[FieldVarMore][COLON] = 97;
 	LL1Table[FieldVarMore][COMMA] = 97;
 
 	LL1Table[FieldVarMore][LEFTMIDPAREN] = 98;
@@ -346,6 +352,614 @@ void CreateLL1Table()
 
 }
 
+void addNode(int flag, int num, string name,STree*father)
+{
+	StackNode* newnode = new StackNode(flag, num);
+	newnode->st = new STree(name);
+	father->addSon(newnode->st);
+	AStack.push(*newnode);
+}
+
+void process(int num,STree *tempst)
+{
+	if (num == 1)
+	{
+		int count = 4;
+		addNode(1, DOT, "DOT",tempst);
+		addNode(0, ProgramBody, "ProgramBody", tempst);
+		addNode(0, DeclarePart, "DeclarePart", tempst);
+		addNode(0, ProgramHead, "ProgramHead", tempst);
+	}
+	else if (num == 2)
+	{
+		int count = 2;
+		addNode(0, ProgramName, "ProgramName", tempst);
+		addNode(1, PROGRAM, "PROGRAM", tempst);
+	}
+	else if (num == 3)
+	{
+		int count = 1;
+		//		addNode(1, COLON, "COLON", tempst);
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 4)
+	{
+		int count = 3;
+		addNode(0, ProcDec, "ProcDec", tempst);
+		addNode(0, VarDec, "VarDec", tempst);
+		addNode(0, TypeDec, "TypeDec", tempst);
+	}
+	else if (num == 5)
+	{
+		;
+	}
+	else if (num == 6)
+	{
+		int count = 1;
+		addNode(0, TypeDeclaration, "TypeDeclaration", tempst);
+	}
+	else if (num == 7)
+	{
+		int count = 2;
+		addNode(0, TypeDecList, "TypeDecList", tempst);
+		addNode(1, TYPE, "TYPE", tempst);
+	}
+	else if (num == 8)
+	{
+		int count = 5;
+		addNode(0, TypeDecMore, "TypeDecMore", tempst);
+		addNode(1, COLON, "COLON", tempst);
+		addNode(0, TypeName, "TypeName", tempst);
+		addNode(1, EQUAL, "EQUAL", tempst);
+		addNode(0, TypeId, "TypeID", tempst);
+	}
+	else if (num == 9)
+	{
+		;
+	}
+	else if (num == 10)
+	{
+		int count = 1;
+		addNode(0, TypeDecList, "TypeDecList", tempst);
+	}
+	else if (num == 11)
+	{
+		int count = 1;
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 12)
+	{
+		int count = 1;
+		addNode(0, BaseType, "BaseType", tempst);
+	}
+	else if (num == 13)
+	{
+		int count = 1;
+		addNode(0, StructureType, "StructureType", tempst);
+	}
+	else if (num == 14)
+	{
+		int count = 1;
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 15)
+	{
+		int count = 1;
+		addNode(1, INTEGER, "INTEGER", tempst);
+	}
+	else if (num == 16)
+	{
+		int count = 1;
+		addNode(1, CHAR, "CHAR1", tempst);
+	}
+	else if (num == 17)
+	{
+		int count = 1;
+		addNode(0, ArrayType, "ArrayType", tempst);
+	}
+	else if (num == 18)
+	{
+		int count = 1;
+		addNode(0, RecType, "RecType", tempst);
+	}
+	else if (num == 19)
+	{
+		int count = 8;
+		addNode(0, BaseType, "BaseType", tempst);
+		addNode(1, OF, "OF", tempst);
+		addNode(1, RIGHTMIDPAREN, "RIGHTMIDPAREN", tempst);
+		addNode(0, Top, "Top", tempst);
+		//addNode(1, UNDERANGE, "UNDERANGE", tempst);
+		addNode(0, Low, "Low", tempst);
+		addNode(1, LEFTMIDPAREN, "LEFTMIDPAREN", tempst);
+		addNode(1, ARRAY, "ARRAY", tempst);
+	}
+	else if (num == 20)
+	{
+		int count = 1;
+		addNode(1, INTC, "INTC", tempst);
+	}
+	else if (num == 21)
+	{
+		int count = 1;
+		addNode(1, INTC, "INTC", tempst);
+	}
+	else if (num == 22)
+	{
+		int count = 3;
+		addNode(1, END, "END", tempst);
+		addNode(0, FieldDecList, "FieldDecList", tempst);
+		addNode(1, RECORD, "RECORD", tempst);
+	}
+	else if (num == 23)
+	{
+		int count = 4;
+		addNode(0, FieldDecMore, "FieldDecMore", tempst);
+		addNode(1, COLON, "COLON", tempst);
+		addNode(0, IdList, "IDList", tempst);
+		addNode(0, BaseType, "BaseType", tempst);
+	}
+	else if (num == 24)
+	{
+		int count = 4;
+		addNode(0, FieldDecMore, "FieldDecMore", tempst);
+		addNode(1, COLON, "COLON", tempst);
+		addNode(0, IdList, "IDList", tempst);
+		addNode(0, ArrayType, "ArrayType", tempst);
+	}
+	else if (num == 25)
+	{
+		;
+	}
+	else if (num == 26)
+	{
+		int count = 1;
+		addNode(0, FieldDecList, "FieldDecList", tempst);
+	}
+	else if (num == 27)
+	{
+		int count = 2;
+		addNode(0, IdMore, "IDMore", tempst);
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 28)
+	{
+		;
+	}
+	else if (num == 29)
+	{
+		int count = 2;
+		addNode(0, IdList, "IDList", tempst);
+		addNode(1, COMMA, "COMMA", tempst);
+	}
+	else if (num == 30)
+	{
+		;
+	}
+	else if (num == 31)
+	{
+		int count = 1;
+		addNode(0, VarDeclaration, "VarDeclaration", tempst);
+	}
+	else if (num == 32)
+	{
+		int count = 2;
+		addNode(0, VarDecList, "VarDecList", tempst);
+		addNode(1, VAR, "VAR", tempst);
+	}
+	else if (num == 33)
+	{
+		int count = 4;
+		addNode(0, VarDecMore, "VarDecMore", tempst);
+		addNode(1, COLON, "COLON", tempst);
+		addNode(0, VarIdList, "VarIDList", tempst);
+		addNode(0, TypeName, "TypeName", tempst);
+	}
+	else if (num == 34)
+	{
+		;
+	}
+	else if (num == 35)
+	{
+		int count = 1;
+		addNode(0, VarDecList, "VarDecList", tempst);
+	}
+	else if (num == 36)
+	{
+		int count = 2;
+		addNode(0, VarIdMore, "VarIDMore", tempst);
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 37)
+	{
+		;
+	}
+	else if (num == 38)
+	{
+		int count = 2;
+		addNode(0, VarIdList, "VarIDList", tempst);
+		addNode(1, COMMA, "COMMA", tempst);
+	}
+	else if (num == 39)
+	{
+		;
+	}
+	else if (num == 40)
+	{
+		int count = 1;
+		addNode(0, ProcDeclaration, "ProcDeclaration", tempst);
+	}
+	else if (num == 41)
+	{
+		int count = 9;
+		addNode(0, ProcDecMore, "ProcDecMore", tempst);
+		addNode(0, ProcBody, "ProcBody", tempst);
+		addNode(0, ProcDecPart, "ProcDecPart", tempst);
+		addNode(1, COLON, "COLON", tempst);
+		addNode(1, RIGHTPAREN, "RIGHTPAREN", tempst);
+		addNode(0, ParamList, "ParamList", tempst);
+		addNode(1, LEFTPAREN, "LEFTPAREN", tempst);
+		addNode(0, ProcName, "ProcName", tempst);
+		addNode(1, PROCEDURE, "PROCEDURE", tempst);
+	}
+	else if (num == 42)
+	{
+		;
+	}
+	else if (num == 43)
+	{
+		int count = 1;
+		addNode(0, ProcDeclaration, "ProcDeclaration", tempst);
+	}
+	else if (num == 44)
+	{
+		int count = 1;
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 45)
+	{
+		;
+	}
+	else if (num == 46)
+	{
+		int count = 1;
+		addNode(0, ParamDecList, "ParamDecList", tempst);
+	}
+	else if (num == 47)
+	{
+		int count = 2;
+		addNode(0, ParamMore, "ParamMore", tempst);
+		addNode(0, Param, "Param", tempst);
+	}
+	else if (num == 48)
+	{
+		;
+	}
+	else if (num == 49)
+	{
+		int count = 2;
+		addNode(0, ParamDecList, "ParamDecList", tempst);
+		addNode(1, COLON, "COLON", tempst);
+	}
+	else if (num == 50)
+	{
+		int count = 2;
+		addNode(0, FormList, "FormList", tempst);
+		addNode(0, TypeName, "TypeName", tempst);
+	}
+	else if (num == 51)
+	{
+		int count = 3;
+		addNode(0, FormList, "FormList", tempst);
+		addNode(0, TypeName, "TypeName", tempst);
+		addNode(1, VAR, "VAR", tempst);
+	}
+	else if (num == 52)
+	{
+		int count = 2;
+		addNode(0, FidMore, "FidMore", tempst);
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 53)
+	{
+		;
+	}
+	else if (num == 54)
+	{
+		int count = 2;
+		addNode(0, FormList, "FormList", tempst);
+		addNode(1, COMMA, "COMMA", tempst);
+	}
+	else if (num == 55)
+	{
+		int count = 1;
+		addNode(0, DeclarePart, "DeclarePart", tempst);
+	}
+	else if (num == 56)
+	{
+		int count = 1;
+		addNode(0, ProgramBody, "ProgramBody", tempst);
+	}
+	else if (num == 57)
+	{
+		int count = 3;
+		addNode(1, END, "END", tempst);
+		addNode(0, StmList, "StmList", tempst);
+		addNode(1, BEGIN, "BEGIN", tempst);
+	}
+	else if (num == 58)
+	{
+		int count = 2;
+		addNode(0, StmMore, "StmMore", tempst);
+		addNode(0, Stm, "Stm", tempst);
+	}
+	else if (num == 59)
+	{
+		;
+	}
+	else if (num == 60)
+	{
+		int count = 2;
+		addNode(0, StmList, "StmList", tempst);
+		addNode(1, COLON, "COLON", tempst);
+	}
+	else if (num == 61)
+	{
+		int count = 1;
+		addNode(0, ConditionalStm, "ConditionalStm", tempst);
+	}
+	else if (num == 62)
+	{
+		int count = 1;
+		addNode(0, LoopStm, "LoopStm", tempst);
+	}
+	else if (num == 63)
+	{
+		int count = 1;
+		addNode(0, InputStm, "InputStm", tempst);
+	}
+	else if (num == 64)
+	{
+		int count = 1;
+		addNode(0, OutputStm, "OutputStm", tempst);
+	}
+	else if (num == 65)
+	{
+		int count = 1;
+		addNode(0, ReturnStm, "ReturnStm", tempst);
+	}
+	else if (num == 66)
+	{
+		int count = 2;
+		addNode(0, AssCall, "AssCall", tempst);
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 67)
+	{
+		int count = 1;
+		addNode(0, AssignmentRest, "AssignmentRest", tempst);
+	}
+	else if (num == 68)
+	{
+		int count = 1;
+		addNode(0, CallStmRest, "CallStmRest", tempst);
+	}
+	else if (num == 69)
+	{
+		int count = 3;
+		addNode(0, Exp, "Exp", tempst);
+		addNode(1, ASSIGN, "ASSIGN", tempst);
+		addNode(0, VariMore, "VariMore", tempst);
+	}
+	else if (num == 70)
+	{
+		int count = 7;
+		addNode(1, FI, "FI", tempst);
+		addNode(0, StmList, "StmList", tempst);
+		addNode(1, ELSE, "ELSE", tempst);
+		addNode(0, StmList, "StmList", tempst);
+		addNode(1, THEN, "THEN", tempst);
+		addNode(0, RelExp, "RelExp", tempst);
+		addNode(1, IF, "IF", tempst);
+	}
+	else if (num == 71)
+	{
+		int count = 5;
+		//addNode(1, COLON, "COLON", tempst);
+		addNode(1, ENDWH, "ENDWH", tempst);
+		addNode(0, StmList, "StmList", tempst);
+		addNode(1, DO, "DO", tempst);
+		addNode(0, RelExp, "RelExp", tempst);
+		addNode(1, WHILE, "WHILE", tempst);
+	}
+	else if (num == 72)
+	{
+		int count = 4;
+		addNode(1, RIGHTPAREN, "RIGHTPAREN", tempst);
+		addNode(0, InVar, "InVar", tempst);
+		addNode(1, LEFTPAREN, "LEFTPAREN", tempst);
+		addNode(1, READ, "READ", tempst);
+	}
+	else if (num == 73)
+	{
+		int count = 1;
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 74)
+	{
+		int count = 4;
+		addNode(1, RIGHTPAREN, "RIGHTPAREN", tempst);
+		addNode(0, Exp, "Exp", tempst);
+		addNode(1, LEFTPAREN, "LEFTPAREN", tempst);
+		addNode(1, WRITE, "WRITE", tempst);
+	}
+	else if (num == 75)
+	{
+		int count = 1;
+		addNode(1, RETURN, "RETURN", tempst);
+	}
+	else if (num == 76)
+	{
+		int count = 3;
+		addNode(1, RIGHTPAREN, "RIGHTPAREN", tempst);
+		addNode(0, ActParamList, "ActParamList", tempst);
+		addNode(1, LEFTPAREN, "LEFTPAREN", tempst);
+	}
+	else if (num == 77)
+	{
+		;
+	}
+	else if (num == 78)
+	{
+		int count = 2;
+		addNode(0, ActParamMore, "ActParamMore", tempst);
+		addNode(0, Exp, "Exp", tempst);
+	}
+	else if (num == 79)
+	{
+		;
+	}
+	else if (num == 80)
+	{
+		int count = 2;
+		addNode(0, ActParamList, "ActParamList", tempst);
+		addNode(1, COMMA, "COMMA", tempst);
+	}
+	else if (num == 81)
+	{
+		int count = 2;
+		addNode(0, OtherRelE, "OtherRelE", tempst);
+		addNode(0, Exp, "Exp", tempst);
+	}
+	else if (num == 82)
+	{
+		int count = 2;
+		addNode(0, Exp, "Exp", tempst);
+		addNode(0, CmpOp, "CmpOp", tempst);
+	}
+	else if (num == 83)
+	{
+		int count = 2;
+		addNode(0, OtherTerm, "OtherTerm", tempst);
+		addNode(0, Term, "Term", tempst);
+	}
+	else if (num == 84)
+	{
+		;
+	}
+	else if (num == 85)
+	{
+		int count = 2;
+		addNode(0, Exp, "Exp", tempst);
+		addNode(0, AddOp, "AddOp", tempst);
+	}
+	else if (num == 86)
+	{
+		int count = 2;
+		addNode(0, OtherFactor, "OtherFactor", tempst);
+		addNode(0, Factor, "Factor", tempst);
+	}
+	else if (num == 87)
+	{
+		;
+	}
+	else if (num == 88)
+	{
+		int count = 2;
+		addNode(0, Term, "Term", tempst);
+		addNode(0, MultOp, "MultOp", tempst);
+	}
+	else if (num == 89)
+	{
+		int count = 3;
+		addNode(1, RIGHTPAREN, "RIGHTPAREN", tempst);
+		addNode(0, Exp, "Exp", tempst);
+		addNode(1, LEFTPAREN, "LEFTPAREN", tempst);
+	}
+	else if (num == 90)
+	{
+		int count = 1;
+		addNode(1, INTC, "INTC", tempst);
+	}
+	else if (num == 91)
+	{
+		int count = 1;
+		addNode(0, Variable, "Variable", tempst);
+	}
+	else if (num == 92)
+	{
+		int count = 2;
+		addNode(0, VariMore, "VariMore", tempst);
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 93)
+	{
+		;
+	}
+	else if (num == 94)
+	{
+		int count = 3;
+		addNode(1, RIGHTMIDPAREN, "RIGHTMIDPAREN", tempst);
+		addNode(0, Exp, "Exp", tempst);
+		addNode(1, LEFTMIDPAREN, "LEFTMIDPAREN", tempst);
+	}
+	else if (num == 95)
+	{
+		int count = 2;
+		addNode(0, FieldVar, "FieldVar", tempst);
+		addNode(1, DOT, "DOT", tempst);
+	}
+	else if (num == 96)
+	{
+		int count = 2;
+		addNode(0, FieldVarMore, "FieldVarMore", tempst);
+		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+	}
+	else if (num == 97)
+	{
+		;
+	}
+	else if (num == 98)
+	{
+		int count = 3;
+		addNode(1, RIGHTMIDPAREN, "RIGHTMIDPAREN", tempst);
+		addNode(0, Exp, "Exp", tempst);
+		addNode(1, LEFTMIDPAREN, "LEFTMIDPAREN", tempst);
+	}
+	else if (num == 99)
+	{
+		int count = 1;
+		addNode(1, LT, "LT", tempst);
+	}
+	else if (num == 100)
+	{
+		int count = 1;
+		addNode(1, EQUAL, "EQUAL", tempst);
+	}
+	else if (num == 101)
+	{
+		int count = 1;
+		addNode(1, ADD, "ADD", tempst);
+	}
+	else if (num == 102)
+	{
+		int count = 1;
+		addNode(1, MINUS, "MINUS", tempst);
+	}
+	else if (num == 103)
+	{
+		int count = 1;
+		addNode(1, MULTY, "MULTY", tempst);
+	}
+	else if (num == 104)
+	{
+		int count = 1;
+		addNode(1, DEVIDE, "DIVIDE", tempst);
+	}
+}
+
+
+
 STree* buildTree(Token *token)
 {
 	Token* next = token->next;
@@ -357,15 +971,52 @@ STree* buildTree(Token *token)
 	StackNode *sn = new StackNode(0, Program);
 	sn->st = root;
 	AStack.push(*sn);
+	int count = 0;
 	while (!AStack.empty())
 	{
+		//cout << count++ << endl;
+		//cout<<"SIZE:"AStack.
+		cout << "FLAG:" << AStack.top().flag << "\tN:" << AStack.top().n << "\tT:" << AStack.top().t << endl;
 		if (AStack.top().flag == 1)
 		{
+			STree* tempst = AStack.top().st;
 			topT = AStack.top().t;
 			if (topT == token->type)
 			{
-				//identifier_list[head->index].text
+				cout << "YES" << endl;
+				//tempst->word = identifier_list[token->index].text;
+				token = token->next;
+				AStack.pop();
+			}
+			else
+			{
+				cout << "T:" << topT<< endl;
+				cout << "type:" << token->type << endl;
+				cout << "Error in Line:" << token->line << "!" << endl;
+				system("pause");
+				//exit(0);
+				//token = token->next;
 			}
 		}
+		else
+		{
+			topN = AStack.top().n;
+			//cout << "??" << topN << endl;
+			//cout <<"!"<< token->type << endl;
+			int temp = LL1Table[topN][token->type];
+			cout << "TEMP:" << temp << endl;
+			STree* tempst = AStack.top().st;
+			AStack.pop();
+			process(temp,tempst);
+			//token = token->next;
+			//cout << "hewe";
+		}
+		
 	}
+	if (token != NULL)
+	{
+		cout << "";
+		system("pause");
+	}
+	return root;
 }

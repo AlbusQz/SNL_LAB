@@ -40,25 +40,6 @@ enum Terminal
 	ASSIGN,//赋值
 	ARRAYTOP,//数组上界
 	ENDOFFILE,  //EOF
-<<<<<<< HEAD
-	LEFTPAREN,
-	RIGHTPAREN,
-	LEFTMIDPAREN,
-	RIGHTMIDPAREN,
-	ERROR,
-	NONE,
-	EQUAL,
-	//其他添加
-	TYPE,
-	RECORD,
-	INTC,
-	SEMICOLON,//分号
-	COMMA,//逗号
-	RETURN,
-	ASSIGN,//赋值符号
-	DOT,//点
-=======
->>>>>>> 87fc15b30bd7c5f122ab946fcc54ecaf1b909f58
 	
 	LEFTPAREN,//左括号
 	RIGHTPAREN,//右括号
@@ -66,10 +47,14 @@ enum Terminal
 	RIGHTMIDPAREN,  //右中括号
 	ERROR,  //错误
 	NONE,	
-	EQUAL //等号
+	EQUAL, //等号
+
+	TYPE,
+	RECORD,
+	INTC,
+	RETURN,
+	DOT
 };
-
-
 
 enum NonTerminal
 {

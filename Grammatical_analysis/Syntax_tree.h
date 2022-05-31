@@ -1,10 +1,11 @@
+#pragma once
 #include<string>
 #include<cstring>
 #include<iostream>
 #include<stack>
-#include"config.h"
+#include "..\Lexical_analysis\config.h"
 using namespace std;
-
+//int LL1Table[104][104];
 //语法树节点类
 class STree
 {
@@ -52,5 +53,8 @@ public:
 	}
 };
 
-STree* rootTree = NULL;
-stack<StackNode> AStack;
+void CreateLL1Table();
+void CreateLL1Table();
+void process(int num, STree* tempst);
+STree* buildTree(Token* token);
+

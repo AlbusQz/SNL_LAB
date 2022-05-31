@@ -32,5 +32,8 @@
     <ClInclude Include="..\Lexical_analysis\config.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Syntax_tree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,14 +6,10 @@
 Token* token_head = new Token();
 Token* token_tail = token_head;
 extern Identifier identifier_list[500];
-const char sourcepath[50] = "source_code.txt",tokenpath[50]="./token_list.txt";
-Identifier identifier_list[500];
-<<<<<<< HEAD
-const char sourcepath[50] = "source.txt",tokenpath[50]="token_list.txt";
-=======
+//const char sourcepath[50] = "source_code.txt",tokenpath[50]="./token_list.txt";
+//Identifier identifier_list[500];
 Const const_list[500];
 const char sourcepath[50] = "source_code.txt",tokenpath[50]="token_list.txt";
->>>>>>> 87fc15b30bd7c5f122ab946fcc54ecaf1b909f58
 int id_list_tail = 0;
 int const_list_tail = 0;
 int main(void)
@@ -27,9 +23,11 @@ int main(void)
 	State state = START;
 	string cur_word = "";
 	while (!source.eof())
+		//cout<<"?",
 	ch = getchar();
 	while (ch != '?')
 	{
+		//cout << "?"
 		switch (state)
 		{
 		case START:
@@ -69,15 +67,12 @@ int main(void)
 			}
 			else
 			{
-				
-				
 				state = DONE;
 				reScan = true;
 				if (isReserved(cur_word))
 				{
 					token_tail->next = new Token(lineNum, findNum(cur_word), -1);
 					token_tail = token_tail->next;
-					
 				}
 				else
 				{
@@ -85,14 +80,8 @@ int main(void)
 					id_list_tail++;
 					token_tail->next = new Token(lineNum,IDENTIFIER,id_list_tail-1);
 					token_tail = token_tail->next;
-				}cur_word = "";
-				if (isSpe(ch))
-				{
-					token_tail->next = new Token(lineNum, findNum(ch), -1);
-					token_tail = token_tail->next;
 				}
-				
-				
+				cur_word = "";
 			}
 			break;
 		case STATEEND:
@@ -131,7 +120,7 @@ int main(void)
 			}
 			break;
 		case DONE:
-			
+
 			break;
 		case INNUM:
 			if (isDigit(ch))

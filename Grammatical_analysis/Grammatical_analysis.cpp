@@ -2,9 +2,14 @@
 //
 
 #include <iostream>
-
+#include"Syntax_tree.h"
+#include "..\Lexical_analysis\config.h"
 int main()
 {
+    Token* head;
+    string path = "D:\\token_list.txt";
+    head = readTokenFromFile(path);
+    STree* root = buildTree(head->next);
     std::cout << "Hello World!\n";
 }
 

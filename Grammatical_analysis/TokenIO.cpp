@@ -1,12 +1,13 @@
+#pragma once
 #define  _CRT_SECURE_NO_WARNINGS
 
 #include "..\Lexical_analysis\config.h"
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "Syntax_tree.h"
 
 Identifier identifier_list[500];
-
 void printTokenToFile(Token* head, string path) {
 	fstream file;
 	file.open(path);
@@ -30,6 +31,7 @@ void printTokenToFile(Token* head, string path) {
 }
 Token* readTokenFromFile(string path)
 {
+	int temp = 0;
 	fstream file;
 	file.open(path);
 	if (!file.is_open())
@@ -50,14 +52,18 @@ Token* readTokenFromFile(string path)
 			&curr->line, &curr->type, & curr->index);
 		if (curr->index != -1)
 		{
-			sscanf(line, "%d %d %d %s",
-				&curr->line, &curr->type, &curr->index, text);
+			//sscanf(line, "%d %d %d %s",
+				//&curr->line, &curr->type, &curr->index, text);
+			sscanf(line, "%s",
+				text);
 			identifier_list[curr->index].text = text;
 		}
 
 		curr->next = new Token();
+		temp++;
 		curr = curr->next;
 	}
 	file.close();
+	cout << temp;
 	return head;
 }

@@ -142,11 +142,14 @@
   <ItemGroup>
     <ClCompile Include="Grammatical_analysis.cpp" />
     <ClCompile Include="Recursive_descent.cpp" />
-    <ClCompile Include="Token2Tree.cpp" />
+    <ClCompile Include="Token2Tree.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="TokenIO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Lexical_analysis\config.h" />
+    <ClInclude Include="Syntax_tree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
