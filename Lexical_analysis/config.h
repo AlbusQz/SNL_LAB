@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 #include<string>
 using namespace std;
 
@@ -7,9 +7,9 @@ using namespace std;
 
 enum Terminal
 {
-	IDENTIFIER,//æ ‡è¯†ç¬¦
-	CONST, //å¸¸é‡
-	//ä¸‹é¢éƒ½æ˜¯ä¿ç•™å­—
+	IDENTIFIER,//±êÊ¶·û
+	CONST, //³£Á¿
+	//ÏÂÃæ¶¼ÊÇ±£Áô×Ö
 	PROGRAM,
 	VAR,
 	INTEGER,
@@ -28,24 +28,24 @@ enum Terminal
 	END,
 	READ,
 	WRITE,
-	//ç‰¹æ®Šç¬¦å·
+	//ÌØÊâ·ûºÅ
 	ADD,//+
 	MINUS,//-
-	MULTY,//Ã—
-	DEVIDE,//Ã·
-	LT,//å°äºŽ
-	COLON,//åˆ†å·
-	COMMA,//é€—å·
-	ASSIGN,//èµ‹å€¼
-	ARRAYTOP,//æ•°ç»„ä¸Šç•Œ
+	MULTY,//¡Á
+	DEVIDE,//¡Â
+	LT,//Ð¡ÓÚ
+	COLON,//·ÖºÅ
+	COMMA,//¶ººÅ
+	ASSIGN,//¸³Öµ
+	ARRAYTOP,//Êý×éÉÏ½ç
 	ENDOFFILE,  //EOF
-	LEFTPAREN,//å·¦æ‹¬å·
-	RIGHTPAREN,//å³æ‹¬å·
-	LEFTMIDPAREN,//å·¦ä¸­æ‹¬å·
-	RIGHTMIDPAREN,  //å³ä¸­æ‹¬å·
-	ERROR,  //é”™è¯¯
+	LEFTPAREN,//×óÀ¨ºÅ
+	RIGHTPAREN,//ÓÒÀ¨ºÅ
+	LEFTMIDPAREN,//×óÖÐÀ¨ºÅ
+	RIGHTMIDPAREN,  //ÓÒÖÐÀ¨ºÅ
+	ERROR,  //´íÎó
 	NONE,	
-	EQUAL //ç­‰å·
+	EQUAL //µÈºÅ
 };
 
 enum
@@ -67,7 +67,7 @@ enum
 	Exp, OtherTerm, Term, OtherFactor,
 	Factor, Variable, VariMore, FieldVar,
 	FieldVarMore, CmpOp, AddOp, MultOp
-}; // éžç»ˆæžç¬¦
+}; // ·ÇÖÕ¼«·û
 
 class Word
 {
