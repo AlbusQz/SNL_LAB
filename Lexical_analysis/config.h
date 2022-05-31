@@ -1,5 +1,6 @@
 #pragma once
 #include<string>
+#include<fstream>
 using namespace std;
 
 
@@ -29,12 +30,17 @@ enum Terminal
 	READ,
 	WRITE,
 	//特殊符号
-	ADD,
-	MINUS,
-	MULTY,
-	DEVIDE,
-	LT,
+	ADD,//+
+	MINUS,//-
+	MULTY,//×
+	DEVIDE,//÷
+	LT,//小于
+	COLON,//分号
+	COMMA,//逗号
+	ASSIGN,//赋值
+	ARRAYTOP,//数组上界
 	ENDOFFILE,  //EOF
+<<<<<<< HEAD
 	LEFTPAREN,
 	RIGHTPAREN,
 	LEFTMIDPAREN,
@@ -51,7 +57,16 @@ enum Terminal
 	RETURN,
 	ASSIGN,//赋值符号
 	DOT,//点
+=======
+>>>>>>> 87fc15b30bd7c5f122ab946fcc54ecaf1b909f58
 	
+	LEFTPAREN,//左括号
+	RIGHTPAREN,//右括号
+	LEFTMIDPAREN,//左中括号
+	RIGHTMIDPAREN,  //右中括号
+	ERROR,  //错误
+	NONE,	
+	EQUAL //等号
 };
 
 
@@ -91,7 +106,11 @@ enum State
 	INID,
 	STATEEND,
 	DONE1,
-	DONE
+	DONE,
+	INNUM,
+	INPOI,
+	INASIGN,
+	INCOMM
 };
 
 class Identifier
@@ -105,6 +124,28 @@ public:
 		text = cont;
 	}
 	Identifier(){}
+};
+
+class Const
+{
+public:
+	bool isnum;
+	int num;
+	string text;
+	Const(int nu)
+	{
+		num = nu;
+		isnum = true;
+	}
+	Const(string tex)
+	{
+		text = tex;
+		isnum = false;
+	}
+	Const()
+	{
+
+	}
 };
 
 
@@ -128,6 +169,7 @@ public:
 		
 		next = NULL;
 	}
+
 };// token
 
 
@@ -138,5 +180,10 @@ bool isLetter(char ch);
 bool isDigit(char ch);
 bool isSpe(char ch);
 void tokenPrint(Token* head);
+
 Terminal findNum(string word);
 Terminal findNum(char ch);
+
+void printTokenToFile(Token* head, string path);
+Token* readTokenFromFile(string path);
+int getValue(string s);

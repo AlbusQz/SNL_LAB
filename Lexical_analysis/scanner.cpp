@@ -3,6 +3,7 @@
 using namespace std;
 //
 extern Identifier identifier_list[500];
+<<<<<<< HEAD
 
 /**/string Termin[50] =
 {
@@ -52,6 +53,9 @@ extern Identifier identifier_list[500];
 	"DOT",//点
 };
 
+=======
+extern Const const_list[500];
+>>>>>>> 87fc15b30bd7c5f122ab946fcc54ecaf1b909f58
 bool isReserved(string s)
 {
 	if (s == "program")
@@ -178,6 +182,7 @@ Terminal findNum(char ch)
 		return RIGHTMIDPAREN;
 	if (ch == '=')
 		return EQUAL;
+<<<<<<< HEAD
 	//曲政添加（有可能出错（很有可能））
 	if (ch == ';')
 		return SEMICOLON;
@@ -187,6 +192,12 @@ Terminal findNum(char ch)
 	}
 	if (ch == '.')
 		return DOT;
+=======
+	if (ch == ';')
+		return COLON;
+	if (ch == ',')
+		return COMMA;
+>>>>>>> 87fc15b30bd7c5f122ab946fcc54ecaf1b909f58
 }
 
 void tokenPrint(Token* head)
@@ -195,17 +206,32 @@ void tokenPrint(Token* head)
 	cout << "Line\t  " << "token\t\t" << "id" << endl;
 	while (head != NULL)
 	{
-		if (head->index != -1)
+		if (head->type ==0)
 		{
+<<<<<<< HEAD
 			cout<<head->line << '\t' << "< " << head->type <<" , " << head->index << " >"<< '\t'<<identifier_list[head->index].text<<"\t" <<Termin[head->type]<< endl;
 		}
 		else
 		{
 			cout << head->line << '\t' << "< " << head->type << " , " << '-' << " >" << "\t\t" << Termin[head->type] << endl;
+=======
+			cout << head->line << '\t' << "< " << head->type << " , " << head->index << " >" << '\t' << identifier_list[head->index].text << endl;
+		}
+		else if (head->type == 1)
+		{
+			if(const_list[head->index].isnum)
+				cout << head->line << '\t' << "< " << head->type << " , " << head->index << " >" << '\t'  << const_list[head->index].num<<endl;
+			else
+				cout << head->line << '\t' << "< " << head->type << " , " << head->index << " >" << '\t' << const_list[head->index].text << endl;
+		}
+		else
+		{
+			cout << head->line << '\t' << "< " << head->type << " , " << '-' << " >" << endl;
+	
+>>>>>>> 87fc15b30bd7c5f122ab946fcc54ecaf1b909f58
 		}
 		head = head->next;
 	}
-	
 }
 
 bool isSpe(char ch)
@@ -232,9 +258,17 @@ bool isSpe(char ch)
 		return true;
 	if (ch == '<')
 		return true;
+<<<<<<< HEAD
 	if (ch == '.')
 		return true;
+=======
+>>>>>>> 87fc15b30bd7c5f122ab946fcc54ecaf1b909f58
 	if (ch == ',')
 		return true;
 	return false;
+}
+
+int getValue(string s)
+{
+	return atoi(s.c_str());
 }

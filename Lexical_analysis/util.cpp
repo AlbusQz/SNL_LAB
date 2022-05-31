@@ -5,9 +5,17 @@
 
 Token* token_head = new Token();
 Token* token_tail = token_head;
+extern Identifier identifier_list[500];
+const char sourcepath[50] = "source_code.txt",tokenpath[50]="./token_list.txt";
 Identifier identifier_list[500];
+<<<<<<< HEAD
 const char sourcepath[50] = "source.txt",tokenpath[50]="token_list.txt";
+=======
+Const const_list[500];
+const char sourcepath[50] = "source_code.txt",tokenpath[50]="token_list.txt";
+>>>>>>> 87fc15b30bd7c5f122ab946fcc54ecaf1b909f58
 int id_list_tail = 0;
+int const_list_tail = 0;
 int main(void)
 {
 	int lineNum = 1;
@@ -15,19 +23,13 @@ int main(void)
 	char ch=' ';
 	fstream source;
 	source.open(sourcepath);
+	bool reScan = false;
 	State state = START;
 	string cur_word = "";
 	while (!source.eof())
+	ch = getchar();
+	while (ch != '?')
 	{
-		source.get(ch);
-		if (ch == '\n')
-			lineNum++;
-		if (state == DONE)
-		{
-			cur_word = "";
-			state = START;
-		}
-			
 		switch (state)
 		{
 		case START:
@@ -42,6 +44,23 @@ int main(void)
 				token_tail = token_tail->next;
 				state = DONE;
 			}
+			if (isDigit(ch))
+			{
+				state = INNUM;
+				cur_word += ch;
+			}
+			if (ch=='.')
+			{
+				state = INPOI;
+			}
+			if (ch == ':')
+			{
+				state = INASIGN;
+			}
+			if (ch == '{')
+			{
+				state = INCOMM;
+			}
 			break;
 		case INID:
 			if (isLetter(ch) || isDigit(ch))
@@ -53,6 +72,7 @@ int main(void)
 				
 				
 				state = DONE;
+				reScan = true;
 				if (isReserved(cur_word))
 				{
 					token_tail->next = new Token(lineNum, findNum(cur_word), -1);
@@ -77,16 +97,83 @@ int main(void)
 			break;
 		case STATEEND:
 			break;
+		case INCOMM:
+			if (ch == '}')
+			{
+				state = DONE;
+			}
+			break;
+		case INASIGN:
+			if (ch == '=')
+			{
+				state = DONE;
+				token_tail->next = new Token(lineNum, ASSIGN, -1);
+				token_tail = token_tail->next;
+			}
+			else
+			{
+				//error
+			}
+			break;
+		case INPOI:
+			if (ch == '.')
+			{
+				state = DONE;
+				token_tail->next = new Token(lineNum, ARRAYTOP,-1);
+				token_tail = token_tail->next;
+			}
+			else
+			{
+				state = DONE;
+				token_tail->next = new Token(lineNum, END, -1);
+				token_tail = token_tail->next;
+				reScan = true;
+			}
+			break;
 		case DONE:
 			
+			break;
+		case INNUM:
+			if (isDigit(ch))
+			{
+				cur_word += ch;
+			}
+			else
+			{
+				state = DONE;
+				reScan = true;
+				const_list[const_list_tail] = Const(getValue(cur_word));
+				const_list_tail++;
+				token_tail->next = new Token(lineNum, CONST, const_list_tail - 1);
+				token_tail = token_tail->next;
+				cur_word = "";
+			}
 			break;
 		default:
 			break;
 		}
 		
+		if (state == DONE)
+		{
+			cur_word = "";
+			state = START;
+		}
+		if (reScan)
+		{
+			reScan = false;
+		}
+		else
+		{
+			if (ch == '\n')
+				lineNum++;
+			ch = getchar();
+		}
+			
 	}
 	tokenPrint(token_head->next);
-
+	printTokenToFile(token_head->next, tokenpath);
+	Token* read = readTokenFromFile(tokenpath);
+	tokenPrint(read->next);
 
 	return 0;
 }
