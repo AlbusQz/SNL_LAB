@@ -29,23 +29,23 @@ enum Terminal
 	READ,
 	WRITE,
 	//特殊符号
-	ADD,
-	MINUS,
-	MULTY,
-	DEVIDE,
-	LT,
-	COLON,
-	COMMA,
-	ASSIGN,
-	ARRAYTOP,
+	ADD,//+
+	MINUS,//-
+	MULTY,//×
+	DEVIDE,//÷
+	LT,//小于
+	COLON,//分号
+	COMMA,//逗号
+	ASSIGN,//赋值
+	ARRAYTOP,//数组上界
 	ENDOFFILE,  //EOF
-	LEFTPAREN,
-	RIGHTPAREN,
-	LEFTMIDPAREN,
-	RIGHTMIDPAREN,
-	ERROR,
-	NONE,
-	EQUAL
+	LEFTPAREN,//左括号
+	RIGHTPAREN,//右括号
+	LEFTMIDPAREN,//左中括号
+	RIGHTMIDPAREN,  //右中括号
+	ERROR,  //错误
+	NONE,	
+	EQUAL //等号
 };
 
 enum
