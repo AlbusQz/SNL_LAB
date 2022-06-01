@@ -22,9 +22,10 @@ int main(void)
 	bool reScan = false;
 	State state = START;
 	string cur_word = "";
+	source.get(ch);
 	while (!source.eof())
 	{
-		source.get(ch);
+		//source.get(ch);
 		switch (state)
 		{
 		case START:
@@ -152,6 +153,7 @@ int main(void)
 		{
 			if (ch == '\n')
 				lineNum++;
+			source.get(ch);
 		}
 			
 	}
