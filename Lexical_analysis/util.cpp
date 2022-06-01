@@ -22,12 +22,10 @@ int main(void)
 	bool reScan = false;
 	State state = START;
 	string cur_word = "";
+	source.get(ch);
+
 	while (!source.eof())
-		//cout<<"?",
-	ch = getchar();
-	while (ch != '?')
 	{
-		//cout << "?"
 		switch (state)
 		{
 		case START:
@@ -155,12 +153,14 @@ int main(void)
 		{
 			if (ch == '\n')
 				lineNum++;
-			ch = getchar();
+			source.get(ch);
+
 		}
 			
 	}
 	tokenPrint(token_head->next);
 	printTokenToFile(token_head->next, tokenpath);
+
 	Token* read = readTokenFromFile(tokenpath);
 	tokenPrint(read->next);
 
