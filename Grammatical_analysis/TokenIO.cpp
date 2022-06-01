@@ -8,25 +8,42 @@
 #include "Syntax_tree.h"
 
 Identifier identifier_list[500];
+extern Const const_list[500];
 void printTokenToFile(Token* head, string path) {
 	fstream file;
-	file.open(path);
+	file.open(path,ios_base::trunc);
 	char line[100] = "";
 	while (head != NULL)
 	{
-		if (head->index != -1)
+		switch (head->type)
 		{
+		case IDENTIFIER:
 			sprintf(line, "%d %d %d %s\n",
 				head->line, head->type, head->index, identifier_list[head->index].text.c_str());
-		}
-		else
-		{
-			sprintf(line, "%d %d %d\n",
-				head->line, head->type, head->index);
+			break;
+		case CONST:
+			if (const_list[head->index].isnum)
+			{
+				sprintf(line, "%d %d %d %d %d\n",
+					head->line, head->type, head->index, const_list[head->index].isnum, const_list[head->index].num);
+			}
+			else
+			{
+				sprintf(line, "%d %d %d %d %s\n",
+					head->line, head->type, head->index, const_list[head->index].isnum, const_list[head->index].text.c_str());
+			}
+			break;
+		default:
+			sprintf(line, "%d %d\n",
+				head->line, head->type);
+			break;
 		}
 		file.write(line, strlen(line));
+
 		head = head->next;
+
 	}
+
 	file.close();
 }
 Token* readTokenFromFile(string path)
@@ -41,29 +58,43 @@ Token* readTokenFromFile(string path)
 	}
 	char line[100] = "";
 	Token* head = new Token();
-	Token* curr = new Token();
-	head->next = curr;
+	Token* curr = head;
+	int isnum = 0;
 	while (!file.eof())
 	{
+		curr = curr->next;
 		file.getline(line, 100);
 
 		char text[100] = "";
-		sscanf(line, "%d %d %d",
-			&curr->line, &curr->type, & curr->index);
-		if (curr->index != -1)
+		sscanf(line, "%d %d",
+			&curr->line, &curr->type);
+		switch (curr->type)
 		{
-			//sscanf(line, "%d %d %d %s",
-				//&curr->line, &curr->type, &curr->index, text);
-			sscanf(line, "%s",
-				text);
-			identifier_list[curr->index].text = text;
+			case IDENTIFIER:
+				sscanf(line, "%d %d %d %s",
+					&curr->line, &curr->type, &curr->index, text);
+				identifier_list[curr->index].text = text;
+				break;
+			case CONST:
+				sscanf(line, "%d %d %d %d %s",
+					&curr->line, &curr->type, &curr->index,&isnum, text);
+				if (isnum)
+				{
+					const_list[curr->index].isnum = true;
+					const_list[curr->index].num = atoi(text);
+				}
+				else
+				{
+					const_list[curr->index].isnum = false;
+					identifier_list[curr->index].text = text;
+				}
+				break;
+			default:
+				break;
 		}
-
 		curr->next = new Token();
-		temp++;
-		curr = curr->next;
 	}
+	curr->next = NULL;
 	file.close();
-	cout << temp;
 	return head;
 }

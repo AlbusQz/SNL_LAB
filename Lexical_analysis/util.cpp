@@ -23,11 +23,8 @@ int main(void)
 	State state = START;
 	string cur_word = "";
 	while (!source.eof())
-		//cout<<"?",
-	ch = getchar();
-	while (ch != '?')
 	{
-		//cout << "?"
+		source.get(ch);
 		switch (state)
 		{
 		case START:
@@ -155,14 +152,14 @@ int main(void)
 		{
 			if (ch == '\n')
 				lineNum++;
-			ch = getchar();
 		}
 			
 	}
 	tokenPrint(token_head->next);
 	printTokenToFile(token_head->next, tokenpath);
-	Token* read = readTokenFromFile(tokenpath);
-	tokenPrint(read->next);
+
+	//Token* read = readTokenFromFile(tokenpath);
+	//tokenPrint(read->next);
 
 	return 0;
 }
