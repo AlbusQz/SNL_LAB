@@ -94,7 +94,7 @@ Terminal findNum(string s)
 		return READ;
 	if (s == "write")
 		return WRITE;
-	
+
 	return ERROR;
 }
 
@@ -132,21 +132,21 @@ void tokenPrint(Token* head)
 	cout << "Line\t  " << "token\t\t" << "id" << endl;
 	while (head != NULL)
 	{
-		if (head->type ==0)
+		if (head->type == IDENTIFIER)
 		{
 			cout << head->line << '\t' << "< " << head->type << " , " << head->index << " >" << '\t' << identifier_list[head->index].text << endl;
 		}
-		else if (head->type == 1)
+		else if (head->type == CONST)
 		{
-			if(const_list[head->index].isnum)
-				cout << head->line << '\t' << "< " << head->type << " , " << head->index << " >" << '\t'  << const_list[head->index].num<<endl;
+			if (const_list[head->index].isnum)
+				cout << head->line << '\t' << "< " << head->type << " , " << head->index << " >" << '\t' << const_list[head->index].num << endl;
 			else
 				cout << head->line << '\t' << "< " << head->type << " , " << head->index << " >" << '\t' << const_list[head->index].text << endl;
 		}
 		else
 		{
 			cout << head->line << '\t' << "< " << head->type << " , " << '-' << " >" << endl;
-	
+
 		}
 		head = head->next;
 	}
