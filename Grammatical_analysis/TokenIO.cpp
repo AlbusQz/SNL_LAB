@@ -8,7 +8,7 @@
 #include "Syntax_tree.h"
 
 Identifier identifier_list[500];
-extern Const const_list[500];
+Const const_list[500];
 void printTokenToFile(Token* head, string path) {
 	fstream file;
 	file.open(path);

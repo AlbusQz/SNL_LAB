@@ -40,6 +40,12 @@ bool isReserved(string s)
 		return true;
 	if (s == "write")
 		return true;
+	if (s == "type")
+		return true;
+	if (s == "record")
+		return true;
+	if (s == "return")
+		return true;
 	return false;
 
 }
@@ -94,6 +100,13 @@ Terminal findNum(string s)
 		return READ;
 	if (s == "write")
 		return WRITE;
+	//ÇúÕşÌí¼Ó
+	if (s == "type")
+		return TYPE;
+	if (s == "record")
+		return RECORD;
+	if (s == "return")
+		return RETURN;
 
 	return ERROR;
 }

@@ -1,4 +1,4 @@
-﻿#include "config.h"
+#include "config.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -8,8 +8,8 @@ Token* token_tail = token_head;
 extern Identifier identifier_list[500];
 //const char sourcepath[50] = "source_code.txt",tokenpath[50]="./token_list.txt";
 //Identifier identifier_list[500];
-Const const_list[500];
-const char sourcepath[50] = "source_code.txt",tokenpath[50]="token_list.txt";
+extern Const const_list[500];
+const char sourcepath[50] = "D:\\sample.txt",tokenpath[50]="D:\\t1.txt";
 int id_list_tail = 0;
 int const_list_tail = 0;
 int main(void)
@@ -156,13 +156,13 @@ int main(void)
 			source.get(ch);
 
 		}
-			
+		//	cout << "?";
 	}
 	tokenPrint(token_head->next);
 	printTokenToFile(token_head->next, tokenpath);
 
 	Token* read = readTokenFromFile(tokenpath);
 	tokenPrint(read->next);
-
+	
 	return 0;
 }

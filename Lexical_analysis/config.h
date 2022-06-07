@@ -51,7 +51,6 @@ enum Terminal
 
 	TYPE,
 	RECORD,
-	INTC,
 	RETURN,
 	DOT
 };
@@ -59,12 +58,12 @@ enum Terminal
 enum NonTerminal
 {
 	Program, ProgramHead, ProgramName, DeclarePart,
-	TypeDec, TypeDeclaration, TypeDecList, TypeDecMore,
-	TypeId, TypeName, BaseType, StructureType,
+	TypeDecpart, TypeDec, TypeDecList, TypeDecMore,
+	TypeId, TypeDef, BaseType, StructureType,
 	ArrayType, Low, Top, RecType,
 	FieldDecList, FieldDecMore, IdList, IdMore,
-	VarDec, VarDeclaration, VarDecList, VarDecMore,
-	VarIdList, VarIdMore, ProcDec, ProcDeclaration,
+	VarDecpart, VarDec, VarDecList, VarDecMore,
+	VarIdList, VarIdMore, ProcDecpart, ProcDec,
 	ProcDecMore, ProcName, ParamList, ParamDecList,
 	ParamMore, Param, FormList, FidMore,
 	ProcDecPart, ProcBody, ProgramBody, StmList,

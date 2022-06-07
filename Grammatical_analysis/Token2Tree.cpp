@@ -9,7 +9,74 @@
 #include<stack>
 #include "..\Lexical_analysis\config.h"
 
+string T[] =
+{
+	"IDENTIFIER",//标识符
+	"CONST", //常量
+	//下面都是保留字
+	"PROGRAM",
+	"VAR",
+	"INTEGER",
+	"ARRAY",
+	"OF",
+	"CHAR",
+	"PROCEDURE",
+	"BEGIN",
+	"WHILE",
+	"DO",
+	"IF",
+	"THEN"
+	"ELSE",
+	"FI",
+	"ENDWH",
+	"END",
+	"READ",
+	"WRITE",
+	//特殊符号
+	"ADD",//+
+	"MINUS",//-
+	"MULTY",//×
+	"DEVIDE",//÷
+	"LT",//小于
+	"COLON",//分号
+	"COMMA",//逗号
+	"ASSIGN",//赋值
+	"ARRAYTOP",//数组上界
+	"ENDOFFILE",  //EOF
 
+	"LEFTPAREN",//左括号
+	"RIGHTPAREN",//右括号
+	"LEFTMIDPAREN",//左中括号
+	"RIGHTMIDPAREN",  //右中括号
+	"ERROR",  //错误
+	"NONE",
+	"EQUAL", //等号
+
+	"TYPE",
+	"RECORD",
+	"RETURN",
+	"DOT"
+};
+
+string N[] = {
+	"Program"," ProgramHead"," ProgramName"," DeclarePart",
+	"TypeDecpart"," TypeDec"," TypeDecList"," TypeDecMore",
+	"TypeId"," TypeDef"," BaseType"," StructureType",
+	"ArrayType"," Low"," Top"," RecType",
+	"FieldDecList"," FieldDecMore"," IdList"," IdMore",
+	"VarDecpart"," VarDec"," VarDecList"," VarDecMore",
+	"VarIdList"," VarIdMore"," ProcDecpart"," ProcDec",
+	"ProcDecMore"," ProcName"," ParamList"," ParamDecList",
+	"ParamMore"," Param"," FormList"," FidMore",
+	"ProcDecPart"," ProcBody"," ProgramBody"," StmList",
+	"StmMore"," Stm"," AssCall"," AssignmentRest",
+	"ConditionalStm"," StmL"," LoopStm"," InputStm",
+	"InVar"," OutputStm"," ReturnStm"," CallStmRest",
+	"ActParamList"," ActParamMore"," RelExp"," OtherRelE",
+	"Exp"," OtherTerm"," Term"," OtherFactor",
+	"Factor"," Variable"," VariMore"," FieldVar",
+	"FieldVarMore"," CmpOp"," AddOp"," MultOp"
+};
 
 STree* rootTree;
 stack<StackNode> AStack;
@@ -32,13 +99,13 @@ void CreateLL1Table()
 	LL1Table[DeclarePart][PROCEDURE] = 4;
 	LL1Table[DeclarePart][BEGIN] = 4;
 
-	LL1Table[TypeDec][VAR] = 5;
-	LL1Table[TypeDec][PROCEDURE] = 5;
-	LL1Table[TypeDec][BEGIN] = 5;
+	LL1Table[TypeDecpart][VAR] = 5;
+	LL1Table[TypeDecpart][PROCEDURE] = 5;
+	LL1Table[TypeDecpart][BEGIN] = 5;
 
-	LL1Table[TypeDec][TYPE] = 6;
+	LL1Table[TypeDecpart][TYPE] = 6;
 
-	LL1Table[TypeDeclaration][TYPE] = 7;
+	LL1Table[TypeDec][TYPE] = 7;
 
 	LL1Table[TypeDecList][IDENTIFIER] = 8;
 
@@ -51,13 +118,13 @@ void CreateLL1Table()
 
 	LL1Table[TypeId][IDENTIFIER] = 11;
 
-	LL1Table[TypeName][INTEGER] = 12;
-	LL1Table[TypeName][CHAR] = 12;
+	LL1Table[TypeDef][INTEGER] = 12;
+	LL1Table[TypeDef][CHAR] = 12;
 
-	LL1Table[TypeName][ARRAY] = 13;
-	LL1Table[TypeName][RECORD] = 13;
+	LL1Table[TypeDef][ARRAY] = 13;
+	LL1Table[TypeDef][RECORD] = 13;
 
-	LL1Table[TypeName][IDENTIFIER] = 14;
+	LL1Table[TypeDef][IDENTIFIER] = 14;
 
 	LL1Table[BaseType][INTEGER] = 15;
 
@@ -69,9 +136,9 @@ void CreateLL1Table()
 
 	LL1Table[ArrayType][ARRAY] = 19;
 
-	LL1Table[Low][INTC] = 20;
+	LL1Table[Low][CONST] = 20;
 
-	LL1Table[Top][INTC] = 21;
+	LL1Table[Top][CONST] = 21;
 
 	LL1Table[RecType][RECORD] = 22;
 
@@ -92,12 +159,12 @@ void CreateLL1Table()
 
 	LL1Table[IdMore][COMMA] = 29;
 
-	LL1Table[VarDec][PROCEDURE] = 30;
-	LL1Table[VarDec][BEGIN] = 30;
+	LL1Table[VarDecpart][PROCEDURE] = 30;
+	LL1Table[VarDecpart][BEGIN] = 30;
 
-	LL1Table[VarDec][VAR] = 31;
+	LL1Table[VarDecpart][VAR] = 31;
 
-	LL1Table[VarDeclaration][VAR] = 32;
+	LL1Table[VarDec][VAR] = 32;
 
 	LL1Table[VarDecList][INTEGER] = 33;
 	LL1Table[VarDecList][CHAR] = 33;
@@ -121,11 +188,11 @@ void CreateLL1Table()
 
 	LL1Table[VarIdMore][COMMA] = 38;
 
-	LL1Table[ProcDec][BEGIN] = 39;
+	LL1Table[ProcDecpart][BEGIN] = 39;
 
-	LL1Table[ProcDec][PROCEDURE] = 40;
+	LL1Table[ProcDecpart][PROCEDURE] = 40;
 
-	LL1Table[ProcDeclaration][PROCEDURE] = 41;
+	LL1Table[ProcDec][PROCEDURE] = 41;
 
 	LL1Table[ProcDecMore][BEGIN] = 42;
 
@@ -164,7 +231,6 @@ void CreateLL1Table()
 	LL1Table[FormList][IDENTIFIER] = 52;
 
 	LL1Table[FidMore][COLON] = 53;
-	LL1Table[FidMore][RIGHTMIDPAREN] = 53;
 	LL1Table[FidMore][RIGHTMIDPAREN] = 53;
 
 	LL1Table[FidMore][COMMA] = 54;
@@ -230,7 +296,7 @@ void CreateLL1Table()
 	LL1Table[ActParamList][RIGHTPAREN] = 77;
 
 	LL1Table[ActParamList][IDENTIFIER] = 78;
-	LL1Table[ActParamList][INTC] = 78;
+	LL1Table[ActParamList][CONST] = 78;
 	LL1Table[ActParamList][LEFTPAREN] = 78;
 
 	LL1Table[ActParamMore][RIGHTPAREN] = 79;
@@ -238,14 +304,14 @@ void CreateLL1Table()
 	LL1Table[ActParamMore][COMMA] = 80;
 
 	LL1Table[RelExp][LEFTPAREN] = 81;
-	LL1Table[RelExp][INTC] = 81;
+	LL1Table[RelExp][CONST] = 81;
 	LL1Table[RelExp][IDENTIFIER] = 81;
 
 	LL1Table[OtherRelE][LT] = 82;
 	LL1Table[OtherRelE][EQUAL] = 82;
 
 	LL1Table[Exp][LEFTPAREN] = 83;
-	LL1Table[Exp][INTC] = 83;
+	LL1Table[Exp][CONST] = 83;
 	LL1Table[Exp][IDENTIFIER] = 83;
 
 	LL1Table[OtherTerm][LT] = 84;
@@ -266,7 +332,7 @@ void CreateLL1Table()
 	LL1Table[OtherTerm][MINUS] = 85;
 
 	LL1Table[Term][LEFTPAREN] = 86;
-	LL1Table[Term][INTC] = 86;
+	LL1Table[Term][CONST] = 86;
 	LL1Table[Term][IDENTIFIER] = 86;
 
 	LL1Table[OtherFactor][ADD] = 87;
@@ -289,7 +355,7 @@ void CreateLL1Table()
 
 	LL1Table[Factor][LEFTPAREN] = 89;
 
-	LL1Table[Factor][INTC] = 90;
+	LL1Table[Factor][CONST] = 90;
 
 	LL1Table[Factor][IDENTIFIER] = 91;
 
@@ -311,7 +377,7 @@ void CreateLL1Table()
 	LL1Table[VariMore][END] = 93;
 	LL1Table[VariMore][COLON] = 93;
 	LL1Table[VariMore][COMMA] = 93;
-	LL1Table[VariMore][RIGHTMIDPAREN] = 93;
+	//LL1Table[VariMore][RIGHTMIDPAREN] = 93;
 
 	LL1Table[VariMore][LEFTMIDPAREN] = 94;
 
@@ -364,7 +430,6 @@ void process(int num,STree *tempst)
 {
 	if (num == 1)
 	{
-		int count = 4;
 		addNode(1, DOT, "DOT",tempst);
 		addNode(0, ProgramBody, "ProgramBody", tempst);
 		addNode(0, DeclarePart, "DeclarePart", tempst);
@@ -372,22 +437,18 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 2)
 	{
-		int count = 2;
 		addNode(0, ProgramName, "ProgramName", tempst);
 		addNode(1, PROGRAM, "PROGRAM", tempst);
 	}
 	else if (num == 3)
 	{
-		int count = 1;
-		//		addNode(1, COLON, "COLON", tempst);
-		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
+			addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
 	else if (num == 4)
 	{
-		int count = 3;
 		addNode(0, ProcDec, "ProcDec", tempst);
 		addNode(0, VarDec, "VarDec", tempst);
-		addNode(0, TypeDec, "TypeDec", tempst);
+		addNode(0, TypeDecpart, "TypeDecpart", tempst);
 	}
 	else if (num == 5)
 	{
@@ -395,21 +456,18 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 6)
 	{
-		int count = 1;
-		addNode(0, TypeDeclaration, "TypeDeclaration", tempst);
+		addNode(0, TypeDec, "TypeDec", tempst);
 	}
 	else if (num == 7)
 	{
-		int count = 2;
 		addNode(0, TypeDecList, "TypeDecList", tempst);
 		addNode(1, TYPE, "TYPE", tempst);
 	}
 	else if (num == 8)
 	{
-		int count = 5;
 		addNode(0, TypeDecMore, "TypeDecMore", tempst);
 		addNode(1, COLON, "COLON", tempst);
-		addNode(0, TypeName, "TypeName", tempst);
+		addNode(0, TypeDef, "TypeDef", tempst);
 		addNode(1, EQUAL, "EQUAL", tempst);
 		addNode(0, TypeId, "TypeID", tempst);
 	}
@@ -419,81 +477,67 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 10)
 	{
-		int count = 1;
 		addNode(0, TypeDecList, "TypeDecList", tempst);
 	}
 	else if (num == 11)
 	{
-		int count = 1;
 		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
 	else if (num == 12)
 	{
-		int count = 1;
 		addNode(0, BaseType, "BaseType", tempst);
 	}
 	else if (num == 13)
 	{
-		int count = 1;
 		addNode(0, StructureType, "StructureType", tempst);
 	}
 	else if (num == 14)
 	{
-		int count = 1;
 		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
 	else if (num == 15)
 	{
-		int count = 1;
 		addNode(1, INTEGER, "INTEGER", tempst);
 	}
 	else if (num == 16)
 	{
-		int count = 1;
-		addNode(1, CHAR, "CHAR1", tempst);
+		addNode(1, CHAR, "CHAR", tempst);
 	}
 	else if (num == 17)
 	{
-		int count = 1;
 		addNode(0, ArrayType, "ArrayType", tempst);
 	}
 	else if (num == 18)
 	{
-		int count = 1;
 		addNode(0, RecType, "RecType", tempst);
 	}
 	else if (num == 19)
 	{
-		int count = 8;
 		addNode(0, BaseType, "BaseType", tempst);
 		addNode(1, OF, "OF", tempst);
 		addNode(1, RIGHTMIDPAREN, "RIGHTMIDPAREN", tempst);
 		addNode(0, Top, "Top", tempst);
-		//addNode(1, UNDERANGE, "UNDERANGE", tempst);
+		addNode(1, ARRAYTOP, "ARRAYTOP", tempst);
 		addNode(0, Low, "Low", tempst);
 		addNode(1, LEFTMIDPAREN, "LEFTMIDPAREN", tempst);
 		addNode(1, ARRAY, "ARRAY", tempst);
 	}
 	else if (num == 20)
 	{
-		int count = 1;
-		addNode(1, INTC, "INTC", tempst);
+		addNode(1, CONST, "CONST", tempst);
 	}
 	else if (num == 21)
 	{
-		int count = 1;
-		addNode(1, INTC, "INTC", tempst);
+		addNode(1, CONST, "CONST", tempst);
 	}
 	else if (num == 22)
 	{
-		int count = 3;
 		addNode(1, END, "END", tempst);
 		addNode(0, FieldDecList, "FieldDecList", tempst);
 		addNode(1, RECORD, "RECORD", tempst);
 	}
 	else if (num == 23)
 	{
-		int count = 4;
 		addNode(0, FieldDecMore, "FieldDecMore", tempst);
 		addNode(1, COLON, "COLON", tempst);
 		addNode(0, IdList, "IDList", tempst);
@@ -501,7 +545,6 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 24)
 	{
-		int count = 4;
 		addNode(0, FieldDecMore, "FieldDecMore", tempst);
 		addNode(1, COLON, "COLON", tempst);
 		addNode(0, IdList, "IDList", tempst);
@@ -513,12 +556,10 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 26)
 	{
-		int count = 1;
 		addNode(0, FieldDecList, "FieldDecList", tempst);
 	}
 	else if (num == 27)
 	{
-		int count = 2;
 		addNode(0, IdMore, "IDMore", tempst);
 		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
@@ -528,7 +569,6 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 29)
 	{
-		int count = 2;
 		addNode(0, IdList, "IDList", tempst);
 		addNode(1, COMMA, "COMMA", tempst);
 	}
@@ -538,22 +578,19 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 31)
 	{
-		int count = 1;
-		addNode(0, VarDeclaration, "VarDeclaration", tempst);
+		addNode(0, VarDec, "VarDec", tempst);
 	}
 	else if (num == 32)
 	{
-		int count = 2;
 		addNode(0, VarDecList, "VarDecList", tempst);
 		addNode(1, VAR, "VAR", tempst);
 	}
 	else if (num == 33)
 	{
-		int count = 4;
 		addNode(0, VarDecMore, "VarDecMore", tempst);
 		addNode(1, COLON, "COLON", tempst);
 		addNode(0, VarIdList, "VarIDList", tempst);
-		addNode(0, TypeName, "TypeName", tempst);
+		addNode(0, TypeDef, "TypeDef", tempst);
 	}
 	else if (num == 34)
 	{
@@ -561,12 +598,10 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 35)
 	{
-		int count = 1;
 		addNode(0, VarDecList, "VarDecList", tempst);
 	}
 	else if (num == 36)
 	{
-		int count = 2;
 		addNode(0, VarIdMore, "VarIDMore", tempst);
 		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
@@ -576,7 +611,6 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 38)
 	{
-		int count = 2;
 		addNode(0, VarIdList, "VarIDList", tempst);
 		addNode(1, COMMA, "COMMA", tempst);
 	}
@@ -586,12 +620,10 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 40)
 	{
-		int count = 1;
-		addNode(0, ProcDeclaration, "ProcDeclaration", tempst);
+		addNode(0, ProcDec, "ProcDec", tempst);
 	}
 	else if (num == 41)
 	{
-		int count = 9;
 		addNode(0, ProcDecMore, "ProcDecMore", tempst);
 		addNode(0, ProcBody, "ProcBody", tempst);
 		addNode(0, ProcDecPart, "ProcDecPart", tempst);
@@ -608,12 +640,10 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 43)
 	{
-		int count = 1;
-		addNode(0, ProcDeclaration, "ProcDeclaration", tempst);
+		addNode(0, ProcDec, "ProcDec", tempst);
 	}
 	else if (num == 44)
 	{
-		int count = 1;
 		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
 	else if (num == 45)
@@ -622,12 +652,10 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 46)
 	{
-		int count = 1;
 		addNode(0, ParamDecList, "ParamDecList", tempst);
 	}
 	else if (num == 47)
 	{
-		int count = 2;
 		addNode(0, ParamMore, "ParamMore", tempst);
 		addNode(0, Param, "Param", tempst);
 	}
@@ -637,26 +665,22 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 49)
 	{
-		int count = 2;
 		addNode(0, ParamDecList, "ParamDecList", tempst);
 		addNode(1, COLON, "COLON", tempst);
 	}
 	else if (num == 50)
 	{
-		int count = 2;
 		addNode(0, FormList, "FormList", tempst);
-		addNode(0, TypeName, "TypeName", tempst);
+		addNode(0, TypeDef, "TypeDef", tempst);
 	}
 	else if (num == 51)
 	{
-		int count = 3;
 		addNode(0, FormList, "FormList", tempst);
-		addNode(0, TypeName, "TypeName", tempst);
+		addNode(0, TypeDef, "TypeDef", tempst);
 		addNode(1, VAR, "VAR", tempst);
 	}
 	else if (num == 52)
 	{
-		int count = 2;
 		addNode(0, FidMore, "FidMore", tempst);
 		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
@@ -666,30 +690,25 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 54)
 	{
-		int count = 2;
 		addNode(0, FormList, "FormList", tempst);
 		addNode(1, COMMA, "COMMA", tempst);
 	}
 	else if (num == 55)
 	{
-		int count = 1;
 		addNode(0, DeclarePart, "DeclarePart", tempst);
 	}
 	else if (num == 56)
 	{
-		int count = 1;
 		addNode(0, ProgramBody, "ProgramBody", tempst);
 	}
 	else if (num == 57)
 	{
-		int count = 3;
 		addNode(1, END, "END", tempst);
 		addNode(0, StmList, "StmList", tempst);
 		addNode(1, BEGIN, "BEGIN", tempst);
 	}
 	else if (num == 58)
 	{
-		int count = 2;
 		addNode(0, StmMore, "StmMore", tempst);
 		addNode(0, Stm, "Stm", tempst);
 	}
@@ -699,61 +718,50 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 60)
 	{
-		int count = 2;
 		addNode(0, StmList, "StmList", tempst);
 		addNode(1, COLON, "COLON", tempst);
 	}
 	else if (num == 61)
 	{
-		int count = 1;
 		addNode(0, ConditionalStm, "ConditionalStm", tempst);
 	}
 	else if (num == 62)
 	{
-		int count = 1;
 		addNode(0, LoopStm, "LoopStm", tempst);
 	}
 	else if (num == 63)
 	{
-		int count = 1;
 		addNode(0, InputStm, "InputStm", tempst);
 	}
 	else if (num == 64)
 	{
-		int count = 1;
 		addNode(0, OutputStm, "OutputStm", tempst);
 	}
 	else if (num == 65)
 	{
-		int count = 1;
 		addNode(0, ReturnStm, "ReturnStm", tempst);
 	}
 	else if (num == 66)
 	{
-		int count = 2;
 		addNode(0, AssCall, "AssCall", tempst);
 		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
 	else if (num == 67)
 	{
-		int count = 1;
 		addNode(0, AssignmentRest, "AssignmentRest", tempst);
 	}
 	else if (num == 68)
 	{
-		int count = 1;
 		addNode(0, CallStmRest, "CallStmRest", tempst);
 	}
 	else if (num == 69)
 	{
-		int count = 3;
 		addNode(0, Exp, "Exp", tempst);
 		addNode(1, ASSIGN, "ASSIGN", tempst);
 		addNode(0, VariMore, "VariMore", tempst);
 	}
 	else if (num == 70)
 	{
-		int count = 7;
 		addNode(1, FI, "FI", tempst);
 		addNode(0, StmList, "StmList", tempst);
 		addNode(1, ELSE, "ELSE", tempst);
@@ -764,8 +772,6 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 71)
 	{
-		int count = 5;
-		//addNode(1, COLON, "COLON", tempst);
 		addNode(1, ENDWH, "ENDWH", tempst);
 		addNode(0, StmList, "StmList", tempst);
 		addNode(1, DO, "DO", tempst);
@@ -774,7 +780,6 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 72)
 	{
-		int count = 4;
 		addNode(1, RIGHTPAREN, "RIGHTPAREN", tempst);
 		addNode(0, InVar, "InVar", tempst);
 		addNode(1, LEFTPAREN, "LEFTPAREN", tempst);
@@ -782,12 +787,10 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 73)
 	{
-		int count = 1;
 		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
 	else if (num == 74)
 	{
-		int count = 4;
 		addNode(1, RIGHTPAREN, "RIGHTPAREN", tempst);
 		addNode(0, Exp, "Exp", tempst);
 		addNode(1, LEFTPAREN, "LEFTPAREN", tempst);
@@ -795,12 +798,10 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 75)
 	{
-		int count = 1;
 		addNode(1, RETURN, "RETURN", tempst);
 	}
 	else if (num == 76)
 	{
-		int count = 3;
 		addNode(1, RIGHTPAREN, "RIGHTPAREN", tempst);
 		addNode(0, ActParamList, "ActParamList", tempst);
 		addNode(1, LEFTPAREN, "LEFTPAREN", tempst);
@@ -811,7 +812,6 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 78)
 	{
-		int count = 2;
 		addNode(0, ActParamMore, "ActParamMore", tempst);
 		addNode(0, Exp, "Exp", tempst);
 	}
@@ -821,25 +821,21 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 80)
 	{
-		int count = 2;
 		addNode(0, ActParamList, "ActParamList", tempst);
-		addNode(1, COMMA, "COMMA", tempst);
+		//addNode(1, COMMA, "COMMA", tempst);
 	}
 	else if (num == 81)
 	{
-		int count = 2;
 		addNode(0, OtherRelE, "OtherRelE", tempst);
 		addNode(0, Exp, "Exp", tempst);
 	}
 	else if (num == 82)
 	{
-		int count = 2;
 		addNode(0, Exp, "Exp", tempst);
 		addNode(0, CmpOp, "CmpOp", tempst);
 	}
 	else if (num == 83)
 	{
-		int count = 2;
 		addNode(0, OtherTerm, "OtherTerm", tempst);
 		addNode(0, Term, "Term", tempst);
 	}
@@ -849,13 +845,11 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 85)
 	{
-		int count = 2;
 		addNode(0, Exp, "Exp", tempst);
 		addNode(0, AddOp, "AddOp", tempst);
 	}
 	else if (num == 86)
 	{
-		int count = 2;
 		addNode(0, OtherFactor, "OtherFactor", tempst);
 		addNode(0, Factor, "Factor", tempst);
 	}
@@ -865,30 +859,25 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 88)
 	{
-		int count = 2;
 		addNode(0, Term, "Term", tempst);
 		addNode(0, MultOp, "MultOp", tempst);
 	}
 	else if (num == 89)
 	{
-		int count = 3;
 		addNode(1, RIGHTPAREN, "RIGHTPAREN", tempst);
 		addNode(0, Exp, "Exp", tempst);
 		addNode(1, LEFTPAREN, "LEFTPAREN", tempst);
 	}
 	else if (num == 90)
 	{
-		int count = 1;
-		addNode(1, INTC, "INTC", tempst);
+		addNode(1, CONST, "CONST", tempst);
 	}
 	else if (num == 91)
 	{
-		int count = 1;
 		addNode(0, Variable, "Variable", tempst);
 	}
 	else if (num == 92)
 	{
-		int count = 2;
 		addNode(0, VariMore, "VariMore", tempst);
 		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
@@ -898,20 +887,17 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 94)
 	{
-		int count = 3;
 		addNode(1, RIGHTMIDPAREN, "RIGHTMIDPAREN", tempst);
 		addNode(0, Exp, "Exp", tempst);
 		addNode(1, LEFTMIDPAREN, "LEFTMIDPAREN", tempst);
 	}
 	else if (num == 95)
 	{
-		int count = 2;
 		addNode(0, FieldVar, "FieldVar", tempst);
 		addNode(1, DOT, "DOT", tempst);
 	}
 	else if (num == 96)
 	{
-		int count = 2;
 		addNode(0, FieldVarMore, "FieldVarMore", tempst);
 		addNode(1, IDENTIFIER, "IDENTIFIER", tempst);
 	}
@@ -921,39 +907,32 @@ void process(int num,STree *tempst)
 	}
 	else if (num == 98)
 	{
-		int count = 3;
 		addNode(1, RIGHTMIDPAREN, "RIGHTMIDPAREN", tempst);
 		addNode(0, Exp, "Exp", tempst);
 		addNode(1, LEFTMIDPAREN, "LEFTMIDPAREN", tempst);
 	}
 	else if (num == 99)
 	{
-		int count = 1;
 		addNode(1, LT, "LT", tempst);
 	}
 	else if (num == 100)
 	{
-		int count = 1;
 		addNode(1, EQUAL, "EQUAL", tempst);
 	}
 	else if (num == 101)
 	{
-		int count = 1;
 		addNode(1, ADD, "ADD", tempst);
 	}
 	else if (num == 102)
 	{
-		int count = 1;
 		addNode(1, MINUS, "MINUS", tempst);
 	}
 	else if (num == 103)
 	{
-		int count = 1;
 		addNode(1, MULTY, "MULTY", tempst);
 	}
 	else if (num == 104)
 	{
-		int count = 1;
 		addNode(1, DEVIDE, "DIVIDE", tempst);
 	}
 }
@@ -974,22 +953,25 @@ STree* buildTree(Token *token)
 	int count = 0;
 	while (!AStack.empty())
 	{
-		//cout << count++ << endl;
-		//cout<<"SIZE:"AStack.
-		cout << "FLAG:" << AStack.top().flag << "\tN:" << AStack.top().n << "\tT:" << AStack.top().t << endl;
+		
+		//cout << "FLAG:" << AStack.top().flag << "\tN:" << AStack.top().n << "\tT:" << AStack.top().t << endl;
+		if (AStack.top().flag == 1)
+			cout << T[AStack.top().t] << endl;
+		else
+			cout << N[AStack.top().n] << endl;
 		if (AStack.top().flag == 1)
 		{
 			STree* tempst = AStack.top().st;
 			topT = AStack.top().t;
 			if (topT == token->type)
 			{
-				cout << "YES" << endl;
-				//tempst->word = identifier_list[token->index].text;
+				cout << "YES,Line:" <<token->line<< endl;
 				token = token->next;
 				AStack.pop();
 			}
 			else
 			{
+				cout << token->type << endl;
 				cout << "T:" << topT<< endl;
 				cout << "type:" << token->type << endl;
 				cout << "Error in Line:" << token->line << "!" << endl;
@@ -1001,15 +983,11 @@ STree* buildTree(Token *token)
 		else
 		{
 			topN = AStack.top().n;
-			//cout << "??" << topN << endl;
-			//cout <<"!"<< token->type << endl;
 			int temp = LL1Table[topN][token->type];
-			cout << "TEMP:" << temp << endl;
+			cout << "TEMP:" << temp<< endl;
 			STree* tempst = AStack.top().st;
 			AStack.pop();
 			process(temp,tempst);
-			//token = token->next;
-			//cout << "hewe";
 		}
 		
 	}
