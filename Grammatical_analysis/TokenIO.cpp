@@ -80,6 +80,7 @@ Token* readTokenFromFile(string path)
 				sscanf(line, "%d %d %d %s",
 					&curr->line, &curr->type, &curr->index, text);
 				identifier_list[curr->index].text = text;
+				curr->name = text;
 				break;
 			case CONST:
 				sscanf(line, "%d %d %d %d %s",
@@ -93,6 +94,7 @@ Token* readTokenFromFile(string path)
 				{
 					const_list[curr->index].isnum = false;
 					identifier_list[curr->index].text = text;
+					curr->name = text;
 				}
 				break;
 			default:

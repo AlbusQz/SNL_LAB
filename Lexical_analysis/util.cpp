@@ -9,7 +9,7 @@ extern Identifier identifier_list[500];
 //const char sourcepath[50] = "source_code.txt",tokenpath[50]="./token_list.txt";
 //Identifier identifier_list[500];
 extern Const const_list[500];
-const char sourcepath[50] = "D:\\sample.txt",tokenpath[50]="D:\\t1.txt";
+const char sourcepath[50] = "D:\\source1.txt",tokenpath[50]="D:\\t1.txt";
 int id_list_tail = 0;
 int const_list_tail = 0;
 int main(void)
@@ -112,9 +112,9 @@ int main(void)
 			else
 			{
 				state = DONE;
-				token_tail->next = new Token(lineNum, END, -1);
+				token_tail->next = new Token(lineNum, DOT, -1);
 				token_tail = token_tail->next;
-				reScan = true;
+				//reScan = true;
 			}
 			break;
 		case DONE:
@@ -158,10 +158,19 @@ int main(void)
 		}
 		//	cout << "?";
 	}
+	
+	//token_tail->type = ENDOFFILE;
 	tokenPrint(token_head->next);
 	printTokenToFile(token_head->next, tokenpath);
 
 	Token* read = readTokenFromFile(tokenpath);
+	Token* r = read;
+	while (r->next != NULL)
+	{
+		r = r->next;
+
+	}
+	r->type = ENDOFFILE;
 	tokenPrint(read->next);
 	
 	return 0;

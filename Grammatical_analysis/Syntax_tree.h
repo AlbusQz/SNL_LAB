@@ -14,16 +14,27 @@ class STree
 	int count;
 	string word;
 	Token* token;
+	int depth;
+	int fdepth;
+	int width;
+	STree* father;
+	bool end;
 	STree(string input)
 	{
 		this->word = input;
 		this->count = 0;
+		depth = 0;
+		fdepth = 0;
+		count = 0;
 		memset(this->sons, 0, size(this->sons));
 		token = NULL;
+		father = NULL;
+		end = true;
 	}
 	void addSon(STree* s)
 	{
 		this->sons[count++] = s;
+		s->father = this;
 	}
 };
 
@@ -57,4 +68,4 @@ void CreateLL1Table();
 void CreateLL1Table();
 void process(int num, STree* tempst);
 STree* buildTree(Token* token);
-
+void printTree(STree* root);

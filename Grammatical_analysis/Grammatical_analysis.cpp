@@ -9,7 +9,11 @@ int main()
     Token* head;
     string path = "D:\\t1.txt";
     head = readTokenFromFile(path);
-    STree* root = buildTree(head->next);
+   STree* root = buildTree(head->next);
+    
+   // printToken(head);
+  //  system("pause");
+   printTree(root);
     std::cout << "Hello World!\n";
 }
 

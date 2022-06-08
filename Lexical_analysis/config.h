@@ -140,6 +140,7 @@ public:
 	Terminal type;
 	int index; 
 	Token* next;
+	string name;
 	Token(int lin,Terminal typ,int in)
 	{
 		line = lin;
@@ -171,3 +172,4 @@ Terminal findNum(char ch);
 void printTokenToFile(Token* head, string path);
 Token* readTokenFromFile(string path);
 int getValue(string s);
+void printToken(Token* token);

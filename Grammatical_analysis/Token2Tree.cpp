@@ -9,6 +9,7 @@
 #include<stack>
 #include "..\Lexical_analysis\config.h"
 
+using namespace std;
 string T[] =
 {
 	"IDENTIFIER",//标识符
@@ -25,7 +26,7 @@ string T[] =
 	"WHILE",
 	"DO",
 	"IF",
-	"THEN"
+	"THEN",
 	"ELSE",
 	"FI",
 	"ENDWH",
@@ -33,29 +34,29 @@ string T[] =
 	"READ",
 	"WRITE",
 	//特殊符号
-	"ADD",//+
-	"MINUS",//-
-	"MULTY",//×
-	"DEVIDE",//÷
-	"LT",//小于
-	"COLON",//分号
-	"COMMA",//逗号
-	"ASSIGN",//赋值
-	"ARRAYTOP",//数组上界
+	"+",//+
+	"-",//-
+	"*",//×
+	"/",//÷
+	"<",//小于
+	";",//分号
+	",",//逗号
+	":=",//赋值
+	"..",//数组上界
 	"ENDOFFILE",  //EOF
 
-	"LEFTPAREN",//左括号
-	"RIGHTPAREN",//右括号
-	"LEFTMIDPAREN",//左中括号
-	"RIGHTMIDPAREN",  //右中括号
+	"(",//左括号
+	")",//右括号
+	"[",//左中括号
+	"]",  //右中括号
 	"ERROR",  //错误
 	"NONE",
-	"EQUAL", //等号
+	"=", //等号
 
 	"TYPE",
 	"RECORD",
 	"RETURN",
-	"DOT"
+	"."
 };
 
 string N[] = {
@@ -82,7 +83,7 @@ STree* rootTree;
 stack<StackNode> AStack;
 //LL1分析表
 int LL1Table[104][104];
-
+int COUNT = 0;
 using namespace std;
 
 void CreateLL1Table()
@@ -231,7 +232,7 @@ void CreateLL1Table()
 	LL1Table[FormList][IDENTIFIER] = 52;
 
 	LL1Table[FidMore][COLON] = 53;
-	LL1Table[FidMore][RIGHTMIDPAREN] = 53;
+	LL1Table[FidMore][RIGHTPAREN] = 53;
 
 	LL1Table[FidMore][COMMA] = 54;
 
@@ -316,17 +317,16 @@ void CreateLL1Table()
 
 	LL1Table[OtherTerm][LT] = 84;
 	LL1Table[OtherTerm][EQUAL] = 84;
+	LL1Table[OtherTerm][RIGHTMIDPAREN] = 84;
 	LL1Table[OtherTerm][THEN] = 84;
+	LL1Table[OtherTerm][ELSE] = 84;
+	LL1Table[OtherTerm][FI] = 84;
 	LL1Table[OtherTerm][DO] = 84;
+	LL1Table[OtherTerm][ENDWH] = 84;
 	LL1Table[OtherTerm][RIGHTPAREN] = 84;
 	LL1Table[OtherTerm][END] = 84;
 	LL1Table[OtherTerm][COLON] = 84;
 	LL1Table[OtherTerm][COMMA] = 84;
-	LL1Table[OtherTerm][ENDWH] = 84;
-	LL1Table[OtherTerm][ELSE] = 84;
-	LL1Table[OtherTerm][FI] = 84;
-	LL1Table[OtherTerm][RIGHTMIDPAREN] = 84;
-
 
 	LL1Table[OtherTerm][ADD] = 85;
 	LL1Table[OtherTerm][MINUS] = 85;
@@ -339,6 +339,7 @@ void CreateLL1Table()
 	LL1Table[OtherFactor][MINUS] = 87;
 	LL1Table[OtherFactor][LT] = 87;
 	LL1Table[OtherFactor][EQUAL] = 87;
+	LL1Table[OtherFactor][RIGHTMIDPAREN] = 87;
 	LL1Table[OtherFactor][THEN] = 87;
 	LL1Table[OtherFactor][ELSE] = 87;
 	LL1Table[OtherFactor][FI] = 87;
@@ -348,7 +349,6 @@ void CreateLL1Table()
 	LL1Table[OtherFactor][END] = 87;
 	LL1Table[OtherFactor][COLON] = 87;
 	LL1Table[OtherFactor][COMMA] = 87;
-	LL1Table[OtherFactor][RIGHTMIDPAREN] = 87;
 
 	LL1Table[OtherFactor][MULTY] = 88;
 	LL1Table[OtherFactor][DEVIDE] = 88;
@@ -422,7 +422,11 @@ void addNode(int flag, int num, string name,STree*father)
 {
 	StackNode* newnode = new StackNode(flag, num);
 	newnode->st = new STree(name);
+	newnode->st->fdepth = father->depth;
+	newnode->st->depth = newnode->st->fdepth + 1;
+	newnode->st->width = COUNT++;
 	father->addSon(newnode->st);
+	newnode->st->father->sons[father->count-1]->end = false;
 	AStack.push(*newnode);
 }
 
@@ -822,7 +826,7 @@ void process(int num,STree *tempst)
 	else if (num == 80)
 	{
 		addNode(0, ActParamList, "ActParamList", tempst);
-		//addNode(1, COMMA, "COMMA", tempst);
+		addNode(1, COMMA, "COMMA", tempst);
 	}
 	else if (num == 81)
 	{
@@ -935,12 +939,18 @@ void process(int num,STree *tempst)
 	{
 		addNode(1, DEVIDE, "DIVIDE", tempst);
 	}
+	else
+	{
+	//system("pause");
+ }
+ COUNT = 0;
 }
 
 
 
 STree* buildTree(Token *token)
 {
+	
 	Token* next = token->next;
 	Terminal topT;
 	NonTerminal topN;
@@ -965,7 +975,11 @@ STree* buildTree(Token *token)
 			topT = AStack.top().t;
 			if (topT == token->type)
 			{
-				cout << "YES,Line:" <<token->line<< endl;
+				if (token->type == IDENTIFIER)
+				{
+					AStack.top().st->word += ": " + token->name;
+				}
+				cout << "YES,Line:" <<token->line<<"\t" << T[token->type] << endl;
 				token = token->next;
 				AStack.pop();
 			}
@@ -988,13 +1002,90 @@ STree* buildTree(Token *token)
 			STree* tempst = AStack.top().st;
 			AStack.pop();
 			process(temp,tempst);
+			
 		}
 		
 	}
 	if (token != NULL)
 	{
-		cout << "";
+		if (token->type == ENDOFFILE)
+			cout << "YE!";
 		system("pause");
 	}
 	return root;
+}
+
+void printToken(Token* token)
+{
+	while (token != NULL)
+	{
+		cout << "Line:" << token->line << "\t" << T[token->type ]<< endl;
+		token = token->next;
+	}
+	cout << "\n\n\n";
+	for (int i = 0; i < 41; i++)
+	{
+		cout<<i<<"\t" << T[i] << endl;
+	}
+	return;
+}
+
+void printTree(STree* root)
+{
+	int flag[1000];
+	memset(flag, 0, sizeof(flag));
+	stack<STree*> st;
+	st.push(root);
+	char output[1000][1000];
+	string out[1000];
+	int c = 0;
+	while (!st.empty())
+	{
+		
+		STree* temp = st.top();
+		st.pop();
+		for (int i = 0; i < temp->count; i++)
+		{
+			st.push(temp->sons[i]);
+		}
+		if ( temp->end==false)
+		{
+			flag[temp->fdepth+1] = 1;
+		}
+		else
+		if (temp->end == true)
+		{
+			flag[temp->fdepth+1] = 0;
+		}
+		
+		
+		for (int i = 0; i <=temp->fdepth; i++)
+		{
+			if (flag[i] == 1)
+			{
+				out[c] +="│";
+			}
+			else
+			{
+				out[c] += " ";
+			}
+		}
+		if (temp->depth != temp->fdepth)
+			out[c]+= "└";
+		if (temp->depth != temp->fdepth)
+		for (int i = temp->fdepth + 1; i < temp->depth+2; i++)
+		{
+			out[c] += "-";
+		}
+		for (int i = temp->depth + 2; i < temp->depth + 2 + temp->word.size(); i++)
+		{
+			out[c]+= temp->word[i- temp->depth -2];
+		}
+		c++;
+	}
+	for (int i = 0; i < c; i++)
+	{
+		cout << out[i]<< endl;
+	}
+	//cout << output[1];
 }
