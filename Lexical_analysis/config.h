@@ -40,15 +40,15 @@ enum Terminal
 	ASSIGN,//赋值
 	ARRAYTOP,//数组上界
 	ENDOFFILE,  //EOF
-	
+
 	LEFTPAREN,//左括号
 	RIGHTPAREN,//右括号
 	LEFTMIDPAREN,//左中括号
 	RIGHTMIDPAREN,  //右中括号
 	ERROR,  //错误
-	NONE,	
+	NONE,
 	EQUAL, //等号
-
+	ENDPOINT,
 	TYPE,
 	RECORD,
 	RETURN,

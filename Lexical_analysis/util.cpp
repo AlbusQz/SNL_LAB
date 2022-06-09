@@ -24,11 +24,13 @@ int main(void)
 	string cur_word = "";
 	source.get(ch);
 
-	while (!source.eof())
+	while (1)
 	{
 		switch (state)
 		{
 		case START:
+			if (source.eof())
+				break;
 			if (isLetter(ch))
 			{
 				state = INID;
@@ -112,9 +114,9 @@ int main(void)
 			else
 			{
 				state = DONE;
-				token_tail->next = new Token(lineNum, DOT, -1);
+				token_tail->next = new Token(lineNum, ENDPOINT, -1);
 				token_tail = token_tail->next;
-				//reScan = true;
+				reScan = true;
 			}
 			break;
 		case DONE:
@@ -139,7 +141,9 @@ int main(void)
 		default:
 			break;
 		}
-		
+		if (state == START && source.eof())
+			break;
+
 		if (state == DONE)
 		{
 			cur_word = "";
@@ -161,17 +165,5 @@ int main(void)
 	
 	//token_tail->type = ENDOFFILE;
 	tokenPrint(token_head->next);
-	printTokenToFile(token_head->next, tokenpath);
-
-	Token* read = readTokenFromFile(tokenpath);
-	Token* r = read;
-	while (r->next != NULL)
-	{
-		r = r->next;
-
-	}
-	r->type = ENDOFFILE;
-	tokenPrint(read->next);
-	
 	return 0;
 }
