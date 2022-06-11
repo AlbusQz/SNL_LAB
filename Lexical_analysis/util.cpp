@@ -26,6 +26,7 @@ int main(void)
 
 	while (1)
 	{
+		
 		switch (state)
 		{
 		case START:
@@ -157,7 +158,10 @@ int main(void)
 		{
 			if (ch == '\n')
 				lineNum++;
-			source.get(ch);
+			if (source.peek()!=EOF)
+				source.get(ch);
+			else
+				ch = EOF;
 
 		}
 		//	cout << "?";
