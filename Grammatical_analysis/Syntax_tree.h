@@ -13,10 +13,9 @@ class STree
 	STree* sons[50];
 	int count;
 	string word;
-	Token* token;
 	int depth;
 	STree* father;
-	bool end;
+
 	STree(string input)
 	{
 		this->word = input;
@@ -24,9 +23,7 @@ class STree
 		depth = 0;
 		count = 0;
 		memset(this->sons, 0, size(this->sons));
-		token = NULL;
 		father = NULL;
-		end = true;
 	}
 	void addSon(STree* s)
 	{

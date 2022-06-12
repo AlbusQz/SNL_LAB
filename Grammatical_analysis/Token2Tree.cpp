@@ -966,10 +966,13 @@ STree* buildTree(Token *token)
 	while (!AStack.empty())
 	{
 		
-		/*if (AStack.top().flag == 1)
-			cout << T[AStack.top().t] << endl;
-		else
-			cout << N[AStack.top().n] << endl;*/
+		if (token == NULL)
+		{
+			cout << "Error!" << endl;
+			cout << "Stack haven't reached the end";
+			system("pause");
+			exit(0);
+		}
 		if (AStack.top().flag == 1)
 		{
 			STree* tempst = AStack.top().st;
@@ -1005,8 +1008,18 @@ STree* buildTree(Token *token)
 	if (token != NULL)
 	{
 		if (token->type == ENDOFFILE)
+		{
 			cout << "End Matching! Gonna Print the Tree!" << endl;
-		system("pause");
+			system("pause");
+			
+		}
+		else
+		{
+			cout << "Error!" << endl;
+			cout<<"Token List haven't reached the end";
+			system("pause");
+			exit(0);
+		}
 	}
 	return root;
 }
@@ -1048,7 +1061,7 @@ void printTree(STree* root)
 		}
 		for (int i = 0; i < temp->depth; i++)
 		{
-			cout << "|---";
+			cout << "|--";
 		}
 
 		cout << temp->word << endl;
