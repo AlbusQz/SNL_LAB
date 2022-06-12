@@ -51,7 +51,6 @@ enum Terminal
 	TYPE,
 	RECORD,
 	RETURN,
-	DOT
 };
 
 enum NonTerminal

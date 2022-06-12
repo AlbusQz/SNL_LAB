@@ -5,7 +5,7 @@
 #include<stack>
 #include "..\Lexical_analysis\config.h"
 using namespace std;
-//int LL1Table[104][104];
+
 //语法树节点类
 class STree
 {
@@ -15,8 +15,6 @@ class STree
 	string word;
 	Token* token;
 	int depth;
-	int fdepth;
-	int width;
 	STree* father;
 	bool end;
 	STree(string input)
@@ -24,7 +22,6 @@ class STree
 		this->word = input;
 		this->count = 0;
 		depth = 0;
-		fdepth = 0;
 		count = 0;
 		memset(this->sons, 0, size(this->sons));
 		token = NULL;
@@ -64,8 +61,14 @@ public:
 	}
 };
 
+//LL1分析表初始化函数
 void CreateLL1Table();
-void CreateLL1Table();
+
+//非终止符转换函数
 void process(int num, STree* tempst);
+
+//建立语法树函数
 STree* buildTree(Token* token);
+
+//打印语法树函数
 void printTree(STree* root);

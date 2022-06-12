@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "..\Grammatical_analysis\Syntax_tree.h"
 
 Token* token_head = new Token();
 Token* token_tail = token_head;
@@ -168,6 +169,8 @@ int main(void)
 	}
 	
 	//token_tail->type = ENDOFFILE;
+	//buildTree(token_head);
 	tokenPrint(token_head->next);
+	printTokenToFile(token_head->next, tokenpath);
 	return 0;
 }

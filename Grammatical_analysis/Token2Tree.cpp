@@ -10,6 +10,8 @@
 #include "..\Lexical_analysis\config.h"
 
 using namespace std;
+
+//终止符字符数组
 string T[] =
 {
 	"IDENTIFIER",//标识符
@@ -52,13 +54,13 @@ string T[] =
 	"ERROR",  //错误
 	"NONE",
 	"=", //等号
-
+	".",
 	"TYPE",
 	"RECORD",
 	"RETURN",
-	"."
 };
 
+//非终止符字符数组
 string N[] = {
 	"Program"," ProgramHead"," ProgramName"," DeclarePart",
 	"TypeDecpart"," TypeDec"," TypeDecList"," TypeDecMore",
@@ -79,13 +81,18 @@ string N[] = {
 	"FieldVarMore"," CmpOp"," AddOp"," MultOp"
 };
 
+//语法树根节点
 STree* rootTree;
+
+//语法分析栈
 stack<StackNode> AStack;
+
 //LL1分析表
 int LL1Table[104][104];
-int COUNT = 0;
+
 using namespace std;
 
+//初始化LL1语法分析表函数
 void CreateLL1Table()
 {
 	memset(LL1Table, 0, sizeof(LL1Table));
@@ -277,7 +284,7 @@ void CreateLL1Table()
 
 	LL1Table[AssignmentRest][ASSIGN] = 69;
 	LL1Table[AssignmentRest][LEFTMIDPAREN] = 69;
-	LL1Table[AssignmentRest][DOT] = 69;
+	LL1Table[AssignmentRest][ENDPOINT] = 69;
 
 	LL1Table[ConditionalStm][IF] = 70;
 
@@ -377,11 +384,10 @@ void CreateLL1Table()
 	LL1Table[VariMore][END] = 93;
 	LL1Table[VariMore][COLON] = 93;
 	LL1Table[VariMore][COMMA] = 93;
-	//LL1Table[VariMore][RIGHTMIDPAREN] = 93;
-
+	
 	LL1Table[VariMore][LEFTMIDPAREN] = 94;
 
-	LL1Table[VariMore][DOT] = 95;
+	LL1Table[VariMore][ENDPOINT] = 95;
 
 	LL1Table[FieldVar][IDENTIFIER] = 96;
 
@@ -418,23 +424,22 @@ void CreateLL1Table()
 
 }
 
+//向语法树中添加节点函数
 void addNode(int flag, int num, string name,STree*father)
 {
 	StackNode* newnode = new StackNode(flag, num);
 	newnode->st = new STree(name);
-	newnode->st->fdepth = father->depth;
-	newnode->st->depth = newnode->st->fdepth + 1;
-	newnode->st->width = COUNT++;
+	newnode->st->depth = father->depth + 1;
 	father->addSon(newnode->st);
-	newnode->st->father->sons[father->count-1]->end = false;
 	AStack.push(*newnode);
 }
 
+//非终止符转换函数
 void process(int num,STree *tempst)
 {
 	if (num == 1)
 	{
-		addNode(1, DOT, "DOT",tempst);
+		addNode(1, ENDPOINT, "ENDPOINT",tempst);
 		addNode(0, ProgramBody, "ProgramBody", tempst);
 		addNode(0, DeclarePart, "DeclarePart", tempst);
 		addNode(0, ProgramHead, "ProgramHead", tempst);
@@ -898,7 +903,7 @@ void process(int num,STree *tempst)
 	else if (num == 95)
 	{
 		addNode(0, FieldVar, "FieldVar", tempst);
-		addNode(1, DOT, "DOT", tempst);
+		addNode(1, ENDPOINT, "ENDPOINT", tempst);
 	}
 	else if (num == 96)
 	{
@@ -941,13 +946,10 @@ void process(int num,STree *tempst)
 	}
 	else
 	{
-	//system("pause");
- }
- COUNT = 0;
+	}
 }
 
-
-
+//建立语法树函数
 STree* buildTree(Token *token)
 {
 	
@@ -964,41 +966,35 @@ STree* buildTree(Token *token)
 	while (!AStack.empty())
 	{
 		
-		//cout << "FLAG:" << AStack.top().flag << "\tN:" << AStack.top().n << "\tT:" << AStack.top().t << endl;
-		if (AStack.top().flag == 1)
+		/*if (AStack.top().flag == 1)
 			cout << T[AStack.top().t] << endl;
 		else
-			cout << N[AStack.top().n] << endl;
+			cout << N[AStack.top().n] << endl;*/
 		if (AStack.top().flag == 1)
 		{
 			STree* tempst = AStack.top().st;
 			topT = AStack.top().t;
 			if (topT == token->type)
 			{
-				if (token->type == IDENTIFIER)
-				{
-					AStack.top().st->word += ": " + token->name;
-				}
-				cout << "YES,Line:" <<token->line<<"\t" << T[token->type] << endl;
+				cout << "Match at Line:" <<token->line<<"\t" << T[token->type] << endl;
 				token = token->next;
 				AStack.pop();
 			}
 			else
 			{
-				cout << token->type << endl;
-				cout << "T:" << topT<< endl;
-				cout << "type:" << token->type << endl;
-				cout << "Error in Line:" << token->line << "!" << endl;
+				cout << "Error!" << endl;
+				cout << "Can't Match at Line:" << token->line << "!" << endl;
+				cout << "Token:" << token->type << "\tStack:" << topT<< endl;
+				//cout << "type:" << token->type << endl;
 				system("pause");
-				//exit(0);
-				//token = token->next;
+				exit(0);
 			}
 		}
 		else
 		{
 			topN = AStack.top().n;
 			int temp = LL1Table[topN][token->type];
-			cout << "TEMP:" << temp<< endl;
+			//cout << "TEMP:" << temp<< endl;
 			STree* tempst = AStack.top().st;
 			AStack.pop();
 			process(temp,tempst);
@@ -1009,12 +1005,13 @@ STree* buildTree(Token *token)
 	if (token != NULL)
 	{
 		if (token->type == ENDOFFILE)
-			cout << "YE!";
+			cout << "End Matching! Gonna Print the Tree!" << endl;
 		system("pause");
 	}
 	return root;
 }
 
+//打印token函数
 void printToken(Token* token)
 {
 	while (token != NULL)
@@ -1030,6 +1027,7 @@ void printToken(Token* token)
 	return;
 }
 
+//打印语法树函数
 void printTree(STree* root)
 {
 	int flag[1000];
@@ -1041,51 +1039,18 @@ void printTree(STree* root)
 	int c = 0;
 	while (!st.empty())
 	{
-		
+
 		STree* temp = st.top();
 		st.pop();
 		for (int i = 0; i < temp->count; i++)
 		{
 			st.push(temp->sons[i]);
 		}
-		if ( temp->end==false)
+		for (int i = 0; i < temp->depth; i++)
 		{
-			flag[temp->fdepth+1] = 1;
+			cout << "|---";
 		}
-		else
-		if (temp->end == true)
-		{
-			flag[temp->fdepth+1] = 0;
-		}
-		
-		
-		for (int i = 0; i <=temp->fdepth; i++)
-		{
-			if (flag[i] == 1)
-			{
-				out[c] +="│";
-			}
-			else
-			{
-				out[c] += " ";
-			}
-		}
-		if (temp->depth != temp->fdepth)
-			out[c]+= "└";
-		if (temp->depth != temp->fdepth)
-		for (int i = temp->fdepth + 1; i < temp->depth+2; i++)
-		{
-			out[c] += "-";
-		}
-		for (int i = temp->depth + 2; i < temp->depth + 2 + temp->word.size(); i++)
-		{
-			out[c]+= temp->word[i- temp->depth -2];
-		}
-		c++;
+
+		cout << temp->word << endl;
 	}
-	for (int i = 0; i < c; i++)
-	{
-		cout << out[i]<< endl;
-	}
-	//cout << output[1];
 }

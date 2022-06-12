@@ -105,8 +105,8 @@ Terminal findNum(string s)
 		return TYPE;
 	if (s == "record")
 		return RECORD;
-	if (s == "return")
-		return RETURN;
+	//if (s == "return")
+	//	return RETURN;
 
 	return ERROR;
 }
